@@ -22,6 +22,11 @@ export DOCKER_ENVIRONMENT_DNS="172.17.42.1"
 export WORKING_DIR="$(pwd)"
 export SHARED_DIRS_BASE="${WORKING_DIR}/docker-hadoop"
 
+# copy public keys
+PUBLIC_KEYS_DIR=${SHARED_DIRS_BASE}/keys
+mkdir -p ${PUBLIC_KEYS_DIR}
+cp ~/.ssh/*.pub ${PUBLIC_KEYS_DIR}/
+
 # build the docker-compose.yml
 cat <<END > "${WORKING_DIR}/docker-compose.yml"
 
