@@ -1,25 +1,15 @@
 #----------------------------------------------------
-# Hadoop 2.6.0 image
+# Apache Hadoop v2 Image
 #----------------------------------------------------
 
 # Set hadoop-2.x as base image
 FROM kikkomep/docker-hadoop-base
-
-# set hadoop version
-ENV HADOOP_VERSION 2.6.0
 
 # Set HADOOP ENV
 ENV HADOOP_HOME /opt/hadoop
 ENV HADOOP_CONF_DIR ${HADOOP_HOME}/etc/hadoop
 RUN echo "export HADOOP_HOME=${HADOOP_HOME}" >> /home/${UNPRIV_USER}/.profile
 RUN echo "export HADOOP_CONF_DIR=${HADOOP_CONF_DIR}" >> /home/${UNPRIV_USER}/.profile
-
-# download hadoop distro
-COPY dist/hadoop-${HADOOP_VERSION}.tar.gz .
-RUN ${HADOOP_ADMIN_SCRIPTS}/deploy-hadoop.sh . ${HADOOP_VERSION} ${HADOOP_HOME}
-
-# Copy configuration files
-COPY config/* ${HADOOP_CONF_DIR}/
 
 # Update $PATH to include ${HADOOP_HOME}/bin
 ENV PATH ${PATH}:${HADOOP_HOME}/bin:${HADOOP_HOME}/sbin
@@ -33,3 +23,9 @@ ADD scripts/start-namenode.sh ${HADOOP_ADMIN_SCRIPTS}/start-namenode.sh
 ADD scripts/start-datanode.sh ${HADOOP_ADMIN_SCRIPTS}/start-datanode.sh
 ADD scripts/start-historyserver.sh ${HADOOP_ADMIN_SCRIPTS}/start-historyserver.sh
 ADD scripts/init-folders.sh ${HADOOP_ADMIN_SCRIPTS}/init-folders.sh
+
+# Set PATH of the default Apache Hadoop v2 configuration
+ENV HADOOP_CUSTOM_CONF_DIR /opt/hadoop-v2-conf-base
+
+# Copy configuration files (hadoop v2)
+COPY config/* ${HADOOP_CUSTOM_CONF_DIR}
