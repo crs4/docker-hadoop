@@ -38,7 +38,12 @@ if [[ -d "${IMAGES_PATH}/${DISTRO}" ]]; then
 	echo -e "\n - Building the '${DISTRO}' base image..."
 	${DOCKER_BUILD_CMD}-${DISTRO}-base ${IMAGES_PATH}/${DISTRO}	
 	# distro version base image
-	if [[ -d "${IMAGES_PATH}/${DISTRO}/v${VERSION_PARTS[0]}" ]]; then
+	if [[ -d "${IMAGES_PATH}/${DISTRO}/v${VERSION_PARTS[0]}/version/${VERSION}" ]]; then
+		
+		# build the base image for the distro
+		echo -e "\n - Building the image for the '${DISTRO}' distro v${VERSION_PARTS[0]} ..."
+		${DOCKER_BUILD_CMD}-${DISTRO}-v${VERSION_PARTS[0]} \
+			${IMAGES_PATH}/${DISTRO}/v${VERSION_PARTS[0]}
 		
 		# download dist version
 		${IMAGES_PATH}/${DISTRO}/scripts/download-hadoop.sh ${VERSION}
@@ -46,7 +51,7 @@ if [[ -d "${IMAGES_PATH}/${DISTRO}" ]]; then
 		# build the version image	
 		echo -e "\n - Building the '${DISTRO}-${VERSION}' image..."
 		${DOCKER_BUILD_CMD}-${DISTRO}-${VERSION} \
-			${IMAGES_PATH}/${DISTRO}/v${VERSION_PARTS[0]}
+			${IMAGES_PATH}/${DISTRO}/v${VERSION_PARTS[0]}/version/${VERSION}
 			
 	else
 		echo -e "\n *** WARNING: version ${VERSION} of the '${DISTRO}' distro not supported !!! \n"
