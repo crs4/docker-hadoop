@@ -7,7 +7,7 @@ if [[ "$#" -ne 2 ]]; then
 fi
 
 # set repository and hadoop version from arguments
-DOCKERHUB_REPOSITORY=${1}
+DOCKERHUB_REPOSITORY_PREFIX=${1}
 HADOOP_VERSION=${2}
 
 # set domain & environment
@@ -36,7 +36,7 @@ dnsdock:
     - "172.17.42.1:53:53/udp"
   
 client:
-  image: ${DOCKERHUB_REPOSITORY}:${HADOOP_VERSION}
+  image: ${DOCKERHUB_REPOSITORY_PREFIX}-${HADOOP_VERSION}
   name: client
   hostname: client
   ports:
@@ -57,7 +57,7 @@ client:
     - ${SHARED_DIRS_BASE}/hadoop-logs:/opt/hadoop/logs  
 
 namenode:
-  image: ${DOCKERHUB_REPOSITORY}:${HADOOP_VERSION}
+  image: ${DOCKERHUB_REPOSITORY_PREFIX}-${HADOOP_VERSION}
   name: namenode
   hostname: namenode
   container_name: namenode  
@@ -74,7 +74,7 @@ namenode:
   command: start-namenode.sh
 
 datanode:
-  image: ${DOCKERHUB_REPOSITORY}:${HADOOP_VERSION}
+  image: ${DOCKERHUB_REPOSITORY_PREFIX}-${HADOOP_VERSION}
   name: datanode
   hostname: datanode
   container_name: datanode
@@ -87,7 +87,7 @@ datanode:
   command: start-datanode.sh        
     
 resourcemanager:
-  image: ${DOCKERHUB_REPOSITORY}:${HADOOP_VERSION}
+  image: ${DOCKERHUB_REPOSITORY_PREFIX}-${HADOOP_VERSION}
   name: resourcemanager
   hostname: resourcemanager
   container_name: resourcemanager  
@@ -106,7 +106,7 @@ resourcemanager:
   command: start-resourcemanager.sh
 
 nodemanager:
-  image: ${DOCKERHUB_REPOSITORY}:${HADOOP_VERSION}
+  image: ${DOCKERHUB_REPOSITORY_PREFIX}-${HADOOP_VERSION}
   name: nodemanager
   hostname: nodemanager
   container_name: nodemanager
@@ -119,7 +119,7 @@ nodemanager:
   command: start-nodemanager.sh 
     
 historyserver:
-  image: ${DOCKERHUB_REPOSITORY}:${HADOOP_VERSION}
+  image: ${DOCKERHUB_REPOSITORY_PREFIX}-${HADOOP_VERSION}
   name: historyserver  
   hostname: historyserver
   container_name: historyserver

@@ -7,7 +7,7 @@ if [[ "$#" -ne 2 ]]; then
 fi
 
 # set repository and hadoop version from arguments
-DOCKERHUB_REPOSITORY=${1}
+DOCKERHUB_REPOSITORY_PREFIX=${1}
 HADOOP_VERSION=${2}
 
 # set compose project name
@@ -17,7 +17,7 @@ DOCKER_COMPOSE_PROJECT="" #"${HADOOP_VERSION}"
 CURRENT_PATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 # buid the docker-compose file
-${CURRENT_PATH}/build-compose.sh ${DOCKERHUB_REPOSITORY} ${HADOOP_VERSION}
+${CURRENT_PATH}/build-compose.sh ${DOCKERHUB_REPOSITORY_PREFIX} ${HADOOP_VERSION}
 
 # start compose
 docker-compose up -d # no-project name
