@@ -46,7 +46,8 @@ if [[ -d "${IMAGES_PATH}/${DISTRO}" ]]; then
 			${IMAGES_PATH}/${DISTRO}/v${VERSION_PARTS[0]}
 		
 		# download dist version
-		${IMAGES_PATH}/${DISTRO}/scripts/download-hadoop.sh ${VERSION}
+		hadoop_archive_path="${IMAGES_PATH}/${DISTRO}/v${VERSION_PARTS[0]}/version/${VERSION}"
+		${IMAGES_PATH}/${DISTRO}/scripts/download-hadoop.sh ${VERSION} ${hadoop_archive_path}
 		
 		# build the version image	
 		echo -e "\n - Building the '${DISTRO}-${VERSION}' image..."
