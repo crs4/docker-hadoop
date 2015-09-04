@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # check the number of arguments
-if [[ "$#" -ne 1 ]]; then
-  echo -e "\n *** Invalid number of arguments: provide Apache Hadoop Version (e.g., 2.6.0) \n"
+if [[ "$#" -ne 2 ]]; then
+  echo -e "\n *** Invalid number of arguments: provide Apache Hadoop Version (e.g., 2.6.0) and the destination path \n"
   exit -1 
 fi
 
@@ -10,11 +10,11 @@ fi
 HADOOP_VERSION=${1}
 HADOOP_VERSION_PARTS=(${HADOOP_VERSION//\./ })
 
-# current path
-CURRENT_PATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+# distro archive path
+DIST_PATH="${2}"
 
-# distro archives (temp)
-DIST_PATH="${CURRENT_PATH}/../v${HADOOP_VERSION_PARTS[0]}/version/${HADOOP_VERSION}"
+# current path
+#CURRENT_PATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 # Set archive URL for downloading Hadoop distros
 APACHE_HADOOP_ARCHIVE_URL="http://archive.apache.org/dist/hadoop/core/"
