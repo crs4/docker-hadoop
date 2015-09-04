@@ -15,7 +15,7 @@ HADOOP_HOME=${4}
 
 # Download the archive if doesn't exists!
 if [[ ! -f "${HADOOP_TARGZ_PATH}" ]]; then
-  download-hadoop.sh ${HADOOP_VERSION}
+  download-hadoop.sh ${HADOOP_VERSION} ${HADOOP_TARGZ_DIR}
 fi
 
 # Expand hadoop archive and move it to the '${HADOOP_HOME}' folder
