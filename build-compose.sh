@@ -23,7 +23,7 @@ export WORKING_DIR="$(pwd)"
 export SHARED_DIRS_BASE="${WORKING_DIR}/docker-hadoop"
 
 # copy public keys
-PUBLIC_KEYS_DIR=${SHARED_DIRS_BASE}/keys
+PUBLIC_KEYS_DIR=${WORKING_DIR}/keys
 mkdir -p ${PUBLIC_KEYS_DIR}
 cp ~/.ssh/*.pub ${PUBLIC_KEYS_DIR}/
 
