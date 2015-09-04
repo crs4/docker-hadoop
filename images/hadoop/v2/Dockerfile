@@ -28,4 +28,4 @@ ADD scripts/init-folders.sh ${HADOOP_ADMIN_SCRIPTS}/init-folders.sh
 ENV HADOOP_CUSTOM_CONF_DIR /opt/hadoop-v2-conf-base
 
 # Copy configuration files (hadoop v2)
-COPY config/* ${HADOOP_CUSTOM_CONF_DIR}
+COPY config/* ${HADOOP_CUSTOM_CONF_DIR}/
