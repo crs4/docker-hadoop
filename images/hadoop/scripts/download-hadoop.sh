@@ -14,7 +14,7 @@ HADOOP_VERSION_PARTS=(${HADOOP_VERSION//\./ })
 CURRENT_PATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 # distro archives (temp)
-DIST_PATH="${CURRENT_PATH}/../v${HADOOP_VERSION_PARTS[0]}/dist"
+DIST_PATH="${CURRENT_PATH}/../v${HADOOP_VERSION_PARTS[0]}/version/${HADOOP_VERSION}"
 
 # Set archive URL for downloading Hadoop distros
 APACHE_HADOOP_ARCHIVE_URL="http://archive.apache.org/dist/hadoop/core/"
