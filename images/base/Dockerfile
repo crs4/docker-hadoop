@@ -73,10 +73,10 @@ RUN mkdir -p /root/.ssh && \
 RUN chown -R aen /opt
     
 # add script for starting the client
-ADD scripts/start-client.sh /usr/local/bin/
+ADD scripts/start-client.sh /usr/bin/
     
 # Expose the port 22
 EXPOSE 22
 
-# Start the SSH daemon
-CMD ["/usr/local/bin/start-client.sh"]
+# Start the client services
+CMD ["/usr/bin/start-client.sh"]
