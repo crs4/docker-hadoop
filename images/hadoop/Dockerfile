@@ -3,7 +3,7 @@
 #----------------------------------------------------
 
 # Set base image
-FROM kikkomep/docker-hadoop:base
+FROM kikkomep/docker-base
 
 # Set HDFS data path
 ENV HDFS_DATA_DIR opt/hadoop/data/hdfs

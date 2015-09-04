@@ -7,7 +7,7 @@ CURRENT_PATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 IMAGES_PATH="${CURRENT_PATH}/images"
 
 # the dockerhub repo to use
-DOCKERHUB_REPOSITORY="kikkomep/docker-hadoop"
+DOCKERHUB_REPOSITORY_PREFIX="kikkomep/docker"
 
 # image to build
 IMAGE_NAME=${1}
@@ -26,17 +26,17 @@ echo -e "\n - DISTRO:  ${DISTRO}"
 echo -e " - VERSION: ${VERSION}"
 
 # docker build command prefix
-DOCKER_BUILD_CMD="docker build -t ${DOCKERHUB_REPOSITORY}"
+DOCKER_BUILD_CMD="docker build -t ${DOCKERHUB_REPOSITORY_PREFIX}"
 
 # build the base image
 echo -e "\n - Building the base image..."
-${DOCKER_BUILD_CMD}:base ${IMAGES_PATH}/base
+${DOCKER_BUILD_CMD}-base ${IMAGES_PATH}/base
 
 # build the selected hadoop distro
 if [[ -d "${IMAGES_PATH}/${DISTRO}" ]]; then
 	# distro base image
 	echo -e "\n - Building the '${DISTRO}' base image..."
-	${DOCKER_BUILD_CMD}:${DISTRO}-base ${IMAGES_PATH}/${DISTRO}	
+	${DOCKER_BUILD_CMD}-${DISTRO}-base ${IMAGES_PATH}/${DISTRO}	
 	# distro version base image
 	if [[ -d "${IMAGES_PATH}/${DISTRO}/v${VERSION_PARTS[0]}" ]]; then
 		
@@ -45,7 +45,7 @@ if [[ -d "${IMAGES_PATH}/${DISTRO}" ]]; then
 		
 		# build the version image	
 		echo -e "\n - Building the '${DISTRO}-${VERSION}' image..."
-		${DOCKER_BUILD_CMD}:${DISTRO}-${VERSION} \
+		${DOCKER_BUILD_CMD}-${DISTRO}-${VERSION} \
 			${IMAGES_PATH}/${DISTRO}/v${VERSION_PARTS[0]}
 			
 	else

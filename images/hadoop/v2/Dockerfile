@@ -3,7 +3,7 @@
 #----------------------------------------------------
 
 # Set hadoop-2.x as base image
-FROM kikkomep/docker-hadoop:hadoop-base
+FROM kikkomep/docker-hadoop-base
 
 # set hadoop version
 ENV HADOOP_VERSION 2.6.0
@@ -16,7 +16,7 @@ RUN echo "export HADOOP_CONF_DIR=${HADOOP_CONF_DIR}" >> /home/${UNPRIV_USER}/.pr
 
 # download hadoop distro
 COPY dist/hadoop-${HADOOP_VERSION}.tar.gz .
-RUN deploy-hadoop.sh . ${HADOOP_VERSION} ${HADOOP_HOME}
+RUN ${HADOOP_ADMIN_SCRIPTS}/deploy-hadoop.sh . ${HADOOP_VERSION} ${HADOOP_HOME}
 
 # Copy configuration files
 COPY config/* ${HADOOP_CONF_DIR}/
