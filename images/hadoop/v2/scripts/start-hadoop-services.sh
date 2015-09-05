@@ -17,8 +17,8 @@ fi
 # Start Hadoop Services
 start-namenode.sh -d
 start-datanode.sh -d
-start-nodemanager.sh -d
 start-resourcemanager.sh -d
+start-nodemanager.sh -d
 start-historyserver.sh -d
 
 # check the arguments
@@ -26,7 +26,7 @@ if [[ $# -gt 0 ]]; then
   	# executes the arguments as bash script
 	/bin/bash -c "$@"
 else
-  	# start open SSH server in foreground mode	
-	/usr/sbin/sshd -D
+  	# start open SSH server in foreground mode
 	echo "- SSH server started !"
+	/usr/sbin/sshd -D
 fi
