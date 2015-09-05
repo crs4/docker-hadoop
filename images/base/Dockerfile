@@ -42,7 +42,6 @@ RUN echo "export JAVA_HOME=${JAVA_HOME}" >> /etc/profile
 ENV UNPRIV_USER aen
 RUN useradd -m ${UNPRIV_USER} -s /bin/bash && \
     echo "${UNPRIV_USER}:hadoop" | chpasswd && \
-    mkdir -p /home/${UNPRIV_USER} && \
     echo "export PATH=${PATH}:/home/${UNPRIV_USER}/.local/bin" >> /home/${UNPRIV_USER}/.profile
 
 # add aen to the admin group    
