@@ -21,3 +21,6 @@ fi
 # Expand hadoop archive and move it to the '${HADOOP_HOME}' folder
 tar xzvf ${HADOOP_TARGZ_PATH} 
 mv hadoop-${HADOOP_VERSION} ${HADOOP_HOME}
+
+# Remove tar.gz after Hadoop installation
+rm ${HADOOP_TARGZ_PATH}
