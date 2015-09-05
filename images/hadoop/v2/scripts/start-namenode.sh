@@ -6,10 +6,12 @@ if [[ ! -d "${HDFS_DATA_DIR}" ]]; then
 fi
 
 # Start the NameNode
-${HADOOP_HOME}/sbin/hadoop-daemon.sh start namenode
+${HADOOP_HOME}/sbin/hadoop-daemon.sh --config $HADOOP_CONF_DIR start namenode
 
 # Init HDFS folders
 ${HADOOP_ADMIN_SCRIPTS}/init-folders.sh
 
-# Log
-tail -f ${HADOOP_HOME}/logs/*namenode-${HOSTNAME}.out
+# Print logs in foreground mode if the first param is not '-d'
+if [[ "${1}" != "-d" ]]; then
+	tail -f ${HADOOP_HOME}/logs/*namenode-${HOSTNAME}.out
+fi
