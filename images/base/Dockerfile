@@ -72,7 +72,7 @@ RUN mkdir -p /root/.ssh && \
 RUN chown -R aen /opt
     
 # add script for starting the client
-ADD scripts/start-client.sh /usr/bin/
+ADD scripts/start-container.sh /usr/bin/
     
 # Expose the port 22
 EXPOSE 22
