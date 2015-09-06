@@ -14,6 +14,11 @@ else
 	echo -e "${current_ip}\t\thistoryserver" >> /etc/hosts
 fi
 
+# FIXME
+# temporarily fix hdfs cache test when
+# when namenode is not localhost
+sed -ie 's/namenode:/localhost:/g' ${HADOOP_CONF_DIR}/core-site.xml
+
 # Start Hadoop Services
 start-namenode.sh -d
 start-datanode.sh -d
