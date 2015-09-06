@@ -73,6 +73,7 @@ RUN chown -R aen /opt
     
 # add script for starting the client
 ADD scripts/start-container.sh /usr/bin/
+ADD scripts/init-folders.sh /usr/bin/
     
 # Expose the port 22
 EXPOSE 22

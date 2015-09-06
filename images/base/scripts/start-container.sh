@@ -13,5 +13,10 @@ if [[ -d "${shared_keys_path}" ]]; then
 		cat ${key} >> /home/aen/.ssh/authorized_keys
 	done
 fi
+
+# init folders
+init-folders.sh
+
 # start open SSH server
+echo "OpenSSH service started"
 /usr/sbin/sshd -D
