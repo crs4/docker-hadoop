@@ -27,11 +27,15 @@ start-nodemanager.sh -d
 start-historyserver.sh -d
 
 # check the arguments
-if [[ $# -eq 2 ]]; then  	
+if [[ $# -gt 1 ]]; then  	
 	# init user folders
 	init-folders.sh
+	# set parameters
+	user=${1}
+	script=${2}
+	shift 2
   	# executes the arguments as bash script
-	sudo -u ${1} ${2}
+	sudo -u ${user} ${script} $@
 else
   	# start open SSH server in foreground mode	
 	start-container.sh
