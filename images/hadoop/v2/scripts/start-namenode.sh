@@ -10,7 +10,7 @@ ${HADOOP_HOME}/sbin/hadoop-daemon.sh --config $HADOOP_CONF_DIR start namenode
 
 # Init HDFS folders
 sleep 3
-${HADOOP_ADMIN_SCRIPTS}/init-folders.sh
+${HADOOP_ADMIN_SCRIPTS}/init-hdfs-folders.sh
 
 # Print logs in foreground mode if the first param is not '-d'
 if [[ "${1}" != "-d" ]]; then
