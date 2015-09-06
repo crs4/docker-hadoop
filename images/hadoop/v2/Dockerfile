@@ -22,7 +22,7 @@ ADD scripts/start-nodemanager.sh ${HADOOP_ADMIN_SCRIPTS}/start-nodemanager.sh
 ADD scripts/start-namenode.sh ${HADOOP_ADMIN_SCRIPTS}/start-namenode.sh
 ADD scripts/start-datanode.sh ${HADOOP_ADMIN_SCRIPTS}/start-datanode.sh
 ADD scripts/start-historyserver.sh ${HADOOP_ADMIN_SCRIPTS}/start-historyserver.sh
-ADD scripts/init-folders.sh ${HADOOP_ADMIN_SCRIPTS}/init-folders.sh
+ADD scripts/init-hdfs-folders.sh ${HADOOP_ADMIN_SCRIPTS}/init-hdfs-folders.sh
 ADD scripts/start-hadoop-services.sh ${HADOOP_ADMIN_SCRIPTS}/start-hadoop-services
 
 # Set PATH of the default Apache Hadoop v2 configuration
