@@ -16,9 +16,6 @@ RUN mkdir ${HADOOP_ADMIN_SCRIPTS}
 ADD scripts/download-hadoop.sh ${HADOOP_ADMIN_SCRIPTS}/download-hadoop.sh
 ADD scripts/deploy-hadoop.sh ${HADOOP_ADMIN_SCRIPTS}/deploy-hadoop.sh
 
-# Add script for downloading and installing pydoop
-ADD scripts/download-pydoop.sh ${HADOOP_ADMIN_SCRIPTS}/download-pydoop.sh
-
 # Update $PATH to include ${HADOOP_ADMIN_SCRIPTS}
 ENV PATH ${PATH}:${HADOOP_ADMIN_SCRIPTS}
 RUN echo "export PATH=${PATH}:${HADOOP_ADMIN_SCRIPTS}" >> /etc/profile 

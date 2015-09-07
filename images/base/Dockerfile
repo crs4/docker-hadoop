@@ -71,7 +71,10 @@ RUN mkdir -p /root/.ssh && \
 # set dir permissions
 RUN chown -R aen /opt
     
-# add script for starting the client
+# Add script for downloading and installing pydoop
+ADD scripts/download-pydoop.sh /usr/bin/download-pydoop.sh
+    
+# Add script for starting the client
 ADD scripts/start-container.sh /usr/bin/
 ADD scripts/init-folders.sh /usr/bin/
     
