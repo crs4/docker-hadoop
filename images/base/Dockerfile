@@ -79,4 +79,4 @@ ADD scripts/init-folders.sh /usr/bin/
 EXPOSE 22
 
 # Start the client services
-CMD ["/usr/bin/start-client.sh"]
+CMD ["/usr/bin/start-container.sh"]
