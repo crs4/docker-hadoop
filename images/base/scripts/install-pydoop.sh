@@ -38,7 +38,7 @@ done
 
 
 # download pydoop if not
-if [[ -d "${PYDOOP_FOLDER}" ]]; then
+if [[ ! -d "${PYDOOP_FOLDER}" ]]; then
 	download-pydoop ${PYDOOP_REPOSITORY} ${PYDOOP_BRANCH} ${PYDOOP_FOLDER}
 fi
 
