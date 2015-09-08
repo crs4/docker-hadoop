@@ -37,8 +37,6 @@ while true; do
 done
 
 
-echo $PYDOOP_REPOSITORY $PYDOOP_BRANCH $PYDOOP_FOLDER $HDFS_BACKEND
-exit
 # download pydoop if not
 if [[ -d "${PYDOOP_FOLDER}" ]]; then
 	download-pydoop ${PYDOOP_REPOSITORY} ${PYDOOP_BRANCH} ${PYDOOP_FOLDER}
