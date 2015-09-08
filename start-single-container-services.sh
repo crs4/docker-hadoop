@@ -14,7 +14,7 @@ usage() {
 }
 
 # parse arguments
-OPTS=`getopt -o r:v:d --long hadoop-version: -n 'parse-options' -- "$@"`
+OPTS=`getopt -o r:v:c:d --long "hadoop-version:,command:" -n 'parse-options' -- "$@"`
 
 # check parsing result
 if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; usage; exit 1 ; fi
@@ -25,6 +25,7 @@ while true; do
   case "$1" in
     -r ) DOCKERHUB_REPOSITORY_PREFIX="$2"; shift; shift ;;
     -v | --hadoop-version ) HADOOP_VERSION="$2"; shift; shift ;;
+    -c | --command ) COMMAND="$2"; shift; shift;;
     -d ) IS_DAEMON=true; shift;;    
     -- ) shift; break ;;
     * ) break ;;
@@ -69,4 +70,4 @@ docker run ${docker_mode} \
     --dns=8.8.8.8 \
     --name "${HADOOP_VERSION}" \
     ${DOCKERHUB_REPOSITORY_PREFIX}-${HADOOP_VERSION} \
-    start-hadoop-services $@
+    start-hadoop-services ${COMMAND}
