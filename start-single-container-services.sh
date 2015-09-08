@@ -1,15 +1,35 @@
 #!/bin/bash
 
-# check the number of arguments
-if [[ "$#" -lt 2 ]]; then
-  echo -e "\n *** Invalid number of arguments: provide DOCKERHUB_REPOSITORY and HADOOP_VERSION \n"
-  exit -1 
-fi
+# set default DockerHub repository
+DOCKERHUB_REPOSITORY_PREFIX="${USER}/docker"
+# set default hadoop version
+HADOOP_VERSION="hadoop-2.7.1"
+# run as daemon flag
+IS_DAEMON=false
 
-# set repository and hadoop version from arguments
-DOCKERHUB_REPOSITORY_PREFIX=${1}
-HADOOP_VERSION=${2}
-shift 2
+# print usage
+usage() { 
+    echo "Usage: $0 [-r <crs4/docker>] [-v | --hadoop-version <develop>] [-d]"
+    exit 1; 
+}
+
+# parse arguments
+OPTS=`getopt -o r:v:d --long hadoop-version: -n 'parse-options' -- "$@"`
+
+# check parsing result
+if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; usage; exit 1 ; fi
+
+# process arguments
+eval set -- "$OPTS"
+while true; do
+  case "$1" in
+    -r ) DOCKERHUB_REPOSITORY_PREFIX="$2"; shift; shift ;;
+    -v | --hadoop-version ) HADOOP_VERSION="$2"; shift; shift ;;
+    -d ) IS_DAEMON=true; shift;;    
+    -- ) shift; break ;;
+    * ) break ;;
+  esac
+done
 
 # set compose project name
 DOCKER_COMPOSE_PROJECT="" #"${HADOOP_VERSION}"
@@ -29,8 +49,9 @@ cp ~/.ssh/*.pub ${PUBLIC_KEYS_DIR}/
 DOCKER_ENVIRONMENT_DNS="172.17.42.1"
 
 # start a new container for running tests and examples
-# FIXME: add -d option
-docker run -it --rm \
+docker_mode="-it --rm"
+if [[ $IS_DAEMON = true ]]; then docker_mode="-d"; fi;
+docker run ${docker_mode} \
     -v ${WORKING_DIR}:/shared \
     -v ${SHARED_DIRS_BASE}/libraries/system/lib:/usr/local/lib \
     -v ${SHARED_DIRS_BASE}/libraries/system/bin:/usr/local/bin \
