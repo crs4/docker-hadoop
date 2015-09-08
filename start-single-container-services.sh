@@ -49,6 +49,9 @@ cp ~/.ssh/*.pub ${PUBLIC_KEYS_DIR}/
 # set default DNS for containers
 DOCKER_ENVIRONMENT_DNS="172.17.42.1"
 
+# set the base path of the shared directories
+SHARED_DIRS_BASE=${WORKING_DIR}/docker-hadoop
+
 # start a new container for running tests and examples
 docker_mode="-it --rm"
 if [[ $IS_DAEMON = true ]]; then docker_mode="-d"; fi;
