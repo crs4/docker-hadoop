@@ -72,7 +72,8 @@ RUN mkdir -p /root/.ssh && \
 RUN chown -R aen /opt
     
 # Add script for downloading and installing pydoop
-ADD scripts/download-pydoop.sh /usr/bin/download-pydoop.sh
+ADD scripts/download-pydoop.sh /usr/bin/download-pydoop
+ADD scripts/install-pydoop.sh /usr/bin/install-pydoop
     
 # Add script for starting the client
 ADD scripts/start-container.sh /usr/bin/
