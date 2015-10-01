@@ -42,35 +42,24 @@ export DOCKER_ENVIRONMENT_DNS="172.17.42.1"
 export WORKING_DIR="$(pwd)"
 export SHARED_DIRS_BASE="${WORKING_DIR}/docker-hadoop"
 
+# Set shared NFS folder
+SHARING_MOUNT_POINT=/sharing
+
 # copy public keys
 PUBLIC_KEYS_DIR=${WORKING_DIR}/keys
 mkdir -p ${PUBLIC_KEYS_DIR}
 cp ~/.ssh/*.pub ${PUBLIC_KEYS_DIR}/
 
-# build the docker-compose.yml
-cat <<END > "${WORKING_DIR}/docker-compose.yml"
-
-# FIXME: add DNS container
-dnsdock:
-  image: tonistiigi/dnsdock
-  name: dnsdock
-  container_name: dnsdock
+# set multihost mode
+if [[ ${multi_host} == true ]]; then
+    CLIENT_VOLUMES=""
+    VOLUMES_FROM=""
+    NFS_MOUNTS="/usr/local/lib,/usr/local/bin,/opt/hadoop/logs"
+    NFS_PARAMS=" --nfs-mounts ${NFS_MOUNTS}"
+else
+    NFS_PARAMS=""
+read -r -d '' CLIENT_VOLUMES << EOM
   volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
-  ports:
-    - "172.17.42.1:53:53/udp"
-  
-client:
-  image: ${DOCKERHUB_REPOSITORY_PREFIX}-${HADOOP_VERSION}
-  name: client
-  hostname: client
-  ports:
-    - "2222:22"
-  environment:
-    - SERVICE_NAME=client
-    - SERVICE_REGION=${DOCKER_ENVIRONMENT}
-  dns: ${DOCKER_ENVIRONMENT_DNS}
-  volumes:    
     - ${WORKING_DIR}:/shared
     - ${SHARED_DIRS_BASE}/libraries/system/lib:/usr/local/lib
     - ${SHARED_DIRS_BASE}/libraries/system/bin:/usr/local/bin
@@ -78,46 +67,105 @@ client:
     - ${SHARED_DIRS_BASE}/libraries/root-user/lib:/root/.local/lib
     - ${SHARED_DIRS_BASE}/libraries/aen-user/bin:/home/aen/.local/bin
     - ${SHARED_DIRS_BASE}/libraries/aen-user/lib:/home/aen/.local/lib
-    - ${SHARED_DIRS_BASE}/hadoop-data:/opt/hadoop/data
-    - ${SHARED_DIRS_BASE}/hadoop-logs:/opt/hadoop/logs  
+    - ${SHARED_DIRS_BASE}/hadoop-data:/${SHARING_MOUNT_POINT}/opt/hadoop/data
+    - ${SHARED_DIRS_BASE}/hadoop-logs:/${SHARING_MOUNT_POINT}/opt/hadoop/logs
+EOM
+read -r -d '' VOLUMES_FROM << EOM
+  volumes_from:
+    - client
+EOM
+fi
+
+# build the docker-compose.yml
+cat <<END > "${WORKING_DIR}/docker-compose.yml"
+
+# FIXME: add DNS container
+nfs:
+  image: ${DOCKERHUB_REPOSITORY_PREFIX}-nfs-server
+  hostname: nfs
+  container_name: nfs
+  domainname: ${DOCKER_CONTAINER_DOMAIN}
+  privileged: true
+  ports:
+    - "111"
+    - "2049"
+  environment:
+    - SERVICE_NAME=nfs
+    - SERVICE_REGION=${DOCKER_ENVIRONMENT}
+  dns: ${DOCKER_ENVIRONMENT_DNS}
+  dns_search: ${DOCKER_CONTAINER_DOMAIN}
+  command: ${SHARING_MOUNT_POINT}
+
+
+#dnsdock:
+#  image: tonistiigi/dnsdock
+#  name: dnsdock
+#  container_name: dnsdock
+#  volumes:
+#    - /var/run/docker.sock:/var/run/docker.sock
+#  ports:
+#    - "172.17.42.1:53:53/udp"
+  
+client:
+  image: ${DOCKERHUB_REPOSITORY_PREFIX}-${HADOOP_VERSION}
+  name: client
+  hostname: client
+  domainname: ${DOCKER_CONTAINER_DOMAIN}
+  privileged: true
+  ports:
+    - "22"
+  environment:
+    - SERVICE_NAME=client
+    - SERVICE_REGION=${DOCKER_ENVIRONMENT}
+  dns: ${DOCKER_ENVIRONMENT_DNS}
+  dns_search: ${DOCKER_CONTAINER_DOMAIN}
+  command: start-container.sh ${EXTERNAL_DNS_OPTS} ${NFS_PARAMS}
+  ${CLIENT_VOLUMES}
 
 namenode:
   image: ${DOCKERHUB_REPOSITORY_PREFIX}-${HADOOP_VERSION}
   name: namenode
   hostname: namenode
-  container_name: namenode  
-  volumes_from:
-    - client
+  domainname: ${DOCKER_CONTAINER_DOMAIN}
+  container_name: namenode
+  privileged: true
+  ${VOLUMES_FROM}
   ports:
     - "9000:9000"
     - "50070:50070"
   environment:
     - DNSDOCK_ALIAS=namenode
     - SERVICE_NAME=namenode
-    - SERVICE_REGION=${DOCKER_ENVIRONMENT}    
+    - SERVICE_REGION=${DOCKER_ENVIRONMENT}
+    #- "affinity:container!=*datanode*"
   dns: ${DOCKER_ENVIRONMENT_DNS}
-  command: start-namenode.sh
+  dns_search: ${DOCKER_CONTAINER_DOMAIN}
+  command: start-namenode.sh ${NFS_PARAMS}
 
 datanode:
   image: ${DOCKERHUB_REPOSITORY_PREFIX}-${HADOOP_VERSION}
   name: datanode
-  hostname: datanode
-  container_name: datanode
-  volumes_from:
-    - client
+  #hostname: datanode
+  domainname: ${DOCKER_CONTAINER_DOMAIN}
+  #container_name: datanode
+  privileged: true
+  ${VOLUMES_FROM}
   environment:
     - SERVICE_NAME=datanode
     - SERVICE_REGION=${DOCKER_ENVIRONMENT}
+    #- "affinity:container!=*namenode*"
   dns: ${DOCKER_ENVIRONMENT_DNS}
-  command: start-datanode.sh        
+  dns_search: ${DOCKER_CONTAINER_DOMAIN}
+  command: start-datanode.sh ${NFS_PARAMS}
     
 resourcemanager:
   image: ${DOCKERHUB_REPOSITORY_PREFIX}-${HADOOP_VERSION}
   name: resourcemanager
   hostname: resourcemanager
-  container_name: resourcemanager  
-  volumes_from:    
-    - client 
+  domainname: ${DOCKER_CONTAINER_DOMAIN}
+  container_name: resourcemanager
+  privileged: true
+  ${VOLUMES_FROM}
   ports:
     - "8088:8088"
     - "8021:8021"    
@@ -127,29 +175,37 @@ resourcemanager:
     - DNSDOCK_ALIAS=resourcemanager
     - SERVICE_NAME=resourcemanager
     - SERVICE_REGION=${DOCKER_ENVIRONMENT}
+    #- "affinity:container!=*nodemanager*"
   dns: ${DOCKER_ENVIRONMENT_DNS}
-  command: start-resourcemanager.sh
+  dns_search: ${DOCKER_CONTAINER_DOMAIN}
+  command: start-resourcemanager.sh ${NFS_PARAMS}
 
 nodemanager:
   image: ${DOCKERHUB_REPOSITORY_PREFIX}-${HADOOP_VERSION}
   name: nodemanager
-  hostname: nodemanager
-  container_name: nodemanager
+  #hostname: nodemanager
+  domainname: ${DOCKER_CONTAINER_DOMAIN}
+  #container_name: nodemanager
+  privileged: true
   environment:
     - SERVICE_NAME=nodemanager
     - SERVICE_REGION=${DOCKER_ENVIRONMENT}
+    #- "affinity:container!=*resourcemanager*"
+  ports:
+    - "8042:8042"
   dns: ${DOCKER_ENVIRONMENT_DNS}
-  volumes_from:
-    - client 
-  command: start-nodemanager.sh 
+  dns_search: ${DOCKER_CONTAINER_DOMAIN}
+  ${VOLUMES_FROM}
+  command: start-nodemanager.sh ${NFS_PARAMS}
     
 historyserver:
   image: ${DOCKERHUB_REPOSITORY_PREFIX}-${HADOOP_VERSION}
   name: historyserver  
   hostname: historyserver
+  domainname: ${DOCKER_CONTAINER_DOMAIN}
   container_name: historyserver
-  volumes_from:
-    - client 
+  privileged: true
+  ${VOLUMES_FROM}
   ports:
     - "10020:10020"
     - "19888:19888"
@@ -157,6 +213,7 @@ historyserver:
     - DNSDOCK_ALIAS=historyserver
     - SERVICE_NAME=historyserver    
     - SERVICE_REGION=${DOCKER_ENVIRONMENT}
-  dns: ${DOCKER_ENVIRONMENT_DNS} 
-  command: start-historyserver.sh 
+  dns: ${DOCKER_ENVIRONMENT_DNS}
+  dns_search: ${DOCKER_CONTAINER_DOMAIN}
+  command: start-historyserver.sh ${NFS_PARAMS}
 END
