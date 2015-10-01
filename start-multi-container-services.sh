@@ -17,7 +17,7 @@ DOCKER_COMPOSE_PROJECT="" #"${HADOOP_VERSION}"
 CURRENT_PATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 # buid the docker-compose file
-${CURRENT_PATH}/build-compose.sh ${DOCKERHUB_REPOSITORY_PREFIX} ${HADOOP_VERSION}
+${CURRENT_PATH}/build-compose.sh --external-dns ${DOCKERHUB_REPOSITORY_PREFIX} ${HADOOP_VERSION}
 
 # start compose
 docker-compose up -d # no-project name
