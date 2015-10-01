@@ -59,9 +59,6 @@ if [[ -d "${shared_keys_path}" ]]; then
 	done
 fi
 
-# init folders
-init-folders.sh
-
 # start open SSH server
 echo "OpenSSH service started"
 /usr/sbin/sshd -D
