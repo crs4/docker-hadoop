@@ -1,18 +1,49 @@
 #!/bin/bash 
 
+
+# default values
+external_dns=false
+background_mode=false
+nfs_enabled=false
+nfs_shared_paths=""
+
+# print usage
+usage() {
+    echo "Usage: $0 [--external-dns] [-d] [--nfs-mounts]"
+    exit 1;
+}
+
+# parse arguments
+OPTS=`getopt -o d: --long external-dns,nfs-mounts: -n 'parse-options' -- "$@"`
+
+# check parsing result
+if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; usage; exit 1 ; fi
+
+# process arguments
+eval set -- "${OPTS}"
+while true; do
+  case "$1" in
+    --external-dns ) external-dns=true; shift;;
+    -d ) background_mode="$1"; shift ;;
+    --nfs-mounts ) nfs_enabled="true"; nfs_shared_paths="${2}" shift; shift ;;
+    -- ) shift; break ;;
+    * ) break ;;
+  esac
+done
+
+
 #  update the DNS table if needed
-if [[ "${1}" == "--external-dns" ]]; then
-	echo "- Using external DNS ..."	
-	shift
+if [[ ${external_dns} == true ]]; then
+	echo "- Using external DNS ..."
 else
-	# fill DNS table
-	current_ip=$(ifconfig eth0 | grep "inet addr" | awk -F: '{print $2}' | awk '{print $1}')
-	echo -e "${current_ip}\t\tnamenode" >> /etc/hosts
-	echo -e "${current_ip}\t\tdatanode" >> /etc/hosts
-	echo -e "${current_ip}\t\tresourcemanager" >> /etc/hosts
-	echo -e "${current_ip}\t\tnodemanager" >> /etc/hosts
-	echo -e "${current_ip}\t\thistoryserver" >> /etc/hosts
+	update-etc-hosts
 fi
+
+
+
+# initializes shared folders
+init-shared-folders ${nfs_enabled} ${nfs_shared_paths}
+
 
 # FIXME
 # temporarily fix hdfs cache test when
