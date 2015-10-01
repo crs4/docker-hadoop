@@ -48,11 +48,19 @@ RUN useradd -m ${UNPRIV_USER} -s /bin/bash && \
 # add aen to the admin group    
 RUN groupadd admin
 RUN usermod  -a -G admin $UNPRIV_USER
-    
+
 # disable ipv6
-RUN echo "net.ipv6.conf.all.disable_ipv6=1"     >> /etc/sysctl.conf && \
-    echo "net.ipv6.conf.default.disable_ipv6=1" >> /etc/sysctl.conf && \
-    echo "net.ipv6.conf.lo.disable_ipv6=1"      >>  /etc/sysctl.conf
+RUN echo "net.ipv6.conf.all.disable_ipv6 = 1"     >> /etc/sysctl.conf && \
+    echo "net.ipv6.conf.default.disable_ipv6 = 1" >> /etc/sysctl.conf && \
+    echo "net.ipv6.conf.eth0.disable_ipv6 = 1" >> /etc/sysctl.conf && \
+    echo "net.ipv6.conf.ethwe.disable_ipv6 = 1" >> /etc/sysctl.conf && \
+    echo "net.ipv6.conf.lo.disable_ipv6 = 1"      >>  /etc/sysctl.conf
+
+# java_opts for disabling IPv6
+ENV _JAVA_OPTIONS "-Djava.net.preferIPv4Stack=true"
+
+# add script for updating the hostname within /etc/hosts
+ADD scripts/update-hostname.sh /usr/bin/update-hostname
 
 # Setup SSH server
 RUN mkdir /var/run/sshd
