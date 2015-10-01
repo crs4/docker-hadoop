@@ -18,38 +18,41 @@
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 
 <configuration>
-  <!--property>
-    <name>fs.default.name</name>
-    <value>hdfs://localhost:8020</value>
-  </property>
+    <!--property>
+      <name>fs.default.name</name>
+      <value>hdfs://localhost:8020</value>
+    </property>
 
 
-  <property>
-    <name>hadoop.proxyuser.oozie.hosts</name>
-    <value>*</value>
-  </property>
-  <property>
-    <name>hadoop.proxyuser.oozie.groups</name>
-    <value>*</value>
-  </property>
+    <property>
+      <name>hadoop.proxyuser.oozie.hosts</name>
+      <value>*</value>
+    </property>
+    <property>
+      <name>hadoop.proxyuser.oozie.groups</name>
+      <value>*</value>
+    </property>
 
 
-  <property>
-    <name>hadoop.proxyuser.httpfs.hosts</name>
-    <value>*</value>
-  </property>
-  <property>
-    <name>hadoop.proxyuser.httpfs.groups</name>
-    <value>*</value>
-  </property-->
-  
-  <!--
-  <property>
-     <name>hadoop.tmp.dir</name>
-     <value>/opt/hadoop/data/tmp</value>
-  </property>
-  -->
+    <property>
+      <name>hadoop.proxyuser.httpfs.hosts</name>
+      <value>*</value>
+    </property>
+    <property>
+      <name>hadoop.proxyuser.httpfs.groups</name>
+      <value>*</value>
+    </property-->
 
-<property><name>fs.default.name</name><value>hdfs://namenode:9000</value></property>
+    <!--
+    <property>
+       <name>hadoop.tmp.dir</name>
+       <value>/opt/hadoop/data/tmp</value>
+    </property>
+    -->
+
+    <property>
+        <name>fs.default.name</name>
+        <value>hdfs://namenode.hadoop.docker.local:9000</value>
+    </property>
 
 </configuration>

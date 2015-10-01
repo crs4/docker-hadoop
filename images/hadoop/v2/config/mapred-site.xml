@@ -20,12 +20,12 @@
   
   <property>
     <name>mapreduce.jobtracker.address</name>
-    <value>resourcemanager:8021</value>
+    <value>resourcemanager.hadoop.docker.local:8021</value>
   </property>
 
   <property>
     <name>mapreduce.jobtracker.http.address</name>
-    <value>resourcemanager:50030</value>
+    <value>resourcemanager.hadoop.docker.local:50030</value>
   </property>
  
   <property>
@@ -33,15 +33,16 @@
     <value>yarn</value>
   </property>
 
-  
+  <!--
   <property>
     <name>mapreduce.jobhistory.address</name>
-    <value>historyserver:10020</value>
+    <value>historyserver.hadoop.docker.local:10020</value>
   </property>
   <property>
     <name>mapreduce.jobhistory.webapp.address</name>
-    <value>historyserver:19888</value>
+    <value>historyserver.hadoop.docker.local:19888</value>
   </property>
+  -->
   
   <property>
     <name>mapreduce.jobhistory.intermediate-done-dir</name>

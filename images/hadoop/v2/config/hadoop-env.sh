@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # Copyright 2011 The Apache Software Foundation
 # 
 # Licensed to the Apache Software Foundation (ASF) under one
@@ -18,7 +19,7 @@
 
 # Set Hadoop-specific environment variables here.
 export PATH=${PATH}:${USER}/.local/bin
-#export PYTHONPATH=${PYTHONPATH}
+export PYTHONPATH=${PYTHONPATH}
 
 # The only required environment variable is JAVA_HOME.  All others are
 # optional.  When running a distributed configuration it is best to
