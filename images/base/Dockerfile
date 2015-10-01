@@ -6,11 +6,11 @@
 FROM ubuntu:latest
 
 # Set noninteractive mode
-ENV DEBIAN_FRONTEND noninteractive
+#ENV DEBIAN_FRONTEND noninteractive
 
 # Install basic devtools
 RUN apt-get update && \
-    apt-get install -y build-essential \
+    apt-get install -y -qq build-essential \
                        software-properties-common \
                        python-setuptools \
                        python-all-dev \
@@ -19,7 +19,8 @@ RUN apt-get update && \
                        libssl-dev zip \
                        wget git \ 
                        openssh-server openssh-client \
-                       dnsutils  
+                       dnsutils nano \
+                       nfs-common inotify-tools
                        
 
 # Install Java8 and set JAVA_HOME
