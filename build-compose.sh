@@ -1,19 +1,39 @@
 #!/bin/bash
 
-# check the number of arguments
-if [[ "$#" -ne 2 ]]; then
-  echo -e "\n *** Invalid number of arguments: provide DOCKERHUB_REPOSITORY and HADOOP_VERSION \n"
-  exit -1 
+# default values
+multi_host=false
+external_dns=false
+
+
+# print usage
+usage() {
+    echo "Usage: $0 [--multi-host] [--external-dns] REPOSITORY_PREFIX HADOOP_VERSION"
+    echo -e "\t - e.g.: $0 --multi-host --external-dns crs4/docker hadoop-2.6.0"
+    exit -1
+}
+
+if [[ $# -lt 2 ]]; then
+    usage
 fi
 
-# set repository and hadoop version from arguments
+if [[ ${1} == "--multi-host" ]]; then
+    multi_host=true
+    shift;
+fi
+
+if [[ ${1} == "--external-dns" ]]; then
+    external_dns=true
+    EXTERNAL_DNS_OPTS="--external-dns"
+    shift;
+fi
+
 DOCKERHUB_REPOSITORY_PREFIX=${1}
 HADOOP_VERSION=${2}
 
 # set domain & environment
 export DOCKER_DOMAIN="docker"
 export DOCKER_ENVIRONMENT="hadoop"
-export DOCKER_CONTAINER_DOMAIN="${DOCKER_ENVIRONMENT}.${DOCKER_DOMAIN}"
+export DOCKER_CONTAINER_DOMAIN="${DOCKER_ENVIRONMENT}.${DOCKER_DOMAIN}.local"
 
 # set default DNS for containers
 export DOCKER_ENVIRONMENT_DNS="172.17.42.1"
