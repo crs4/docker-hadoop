@@ -83,10 +83,19 @@ RUN chown -R aen /opt
 # Add script for downloading and installing pydoop
 ADD scripts/download-pydoop.sh /usr/bin/download-pydoop
 ADD scripts/install-pydoop.sh /usr/bin/install-pydoop
-    
+
+# Add script for configuring a local DNS
+ADD scripts/update-etc-hosts.sh /usr/bin/update-etc-hosts
+
 # Add script for starting the client
 ADD scripts/start-container.sh /usr/bin/
-ADD scripts/init-folders.sh /usr/bin/
+
+# Set shared NFS folder
+ENV SHARING_MOUNT_POINT /sharing
+
+# Add scripts for mounting NFS
+ADD scripts/nfs-client.sh /usr/bin/nfs-client
+ADD scripts/init-shared-folders.sh /usr/bin/init-shared-folders
     
 # Expose the port 22
 EXPOSE 22
