@@ -32,6 +32,10 @@ DOCKER_BUILD_CMD="docker build -t ${DOCKERHUB_REPOSITORY_PREFIX}"
 echo -e "\n - Building the base image..."
 ${DOCKER_BUILD_CMD}-base ${IMAGES_PATH}/base
 
+# build the base image
+echo -e "\n - Building the nfs-server image..."
+${DOCKER_BUILD_CMD}-nfs-server ${IMAGES_PATH}/nfs-server
+
 # build the selected hadoop distro
 if [[ -d "${IMAGES_PATH}/${DISTRO}" ]]; then
 	# distro base image
