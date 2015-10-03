@@ -98,7 +98,7 @@ ADD scripts/nfs-client.sh /usr/bin/nfs-client
 ADD scripts/init-shared-folders.sh /usr/bin/init-shared-folders
     
 # Expose the port 22
-EXPOSE 22
+# EXPOSE 22
 
 # Start the client services
 CMD ["/usr/bin/start-container.sh"]
