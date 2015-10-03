@@ -23,8 +23,8 @@ WEAVE_PROXY_PORT=12375
 
 # create a new token
 echo "Creating a new token..."
-#TOKEN=$(docker run -it --rm swarm create)
-swarm_dicovery_token=$(curl -s -XPOST https://discovery-stage.hub.docker.com/v1/clusters)
+swarm_dicovery_token=$(docker run -it --rm swarm create)
+echo "Token: ${swarm_dicovery_token}"
 
 # Load hosts into an array.
 declare -a hosts
@@ -36,6 +36,8 @@ while IFS=$'\n' read -r line_data; do
     ((++i))
 done < $1
 
+number_of_nodes=${#hosts[@]}
+echo "Number of nodes: ${number_of_nodes}"
 
 # create the weave network
 echo " ** Creating WEAVE NetWork ...."
@@ -53,17 +55,19 @@ do
     echo -e " -> joining host ${host} (ip: ${address}) ...."
 
     ssh_cmd="ssh ${USER}@${host}"
-    WEAVE_LAUNCH_ROUTER="${WEAVE_BIN} launch-router --dns-domain=${WEAVE_NETWORK_DOMAIN}"
+    WEAVE_LAUNCH_ROUTER="${WEAVE_BIN} launch-router --init-peer-count ${number_of_nodes} --dns-domain=${WEAVE_NETWORK_DOMAIN}"
     echo ${WEAVE_LAUNCH_ROUTER}
     ${ssh_cmd} ${WEAVE_LAUNCH_ROUTER}
 
-    WEAVE_LAUNCH_PROXY="${WEAVE_BIN} launch-proxy --with-dns -H tcp://${address}:${WEAVE_PROXY_PORT}"
+    WEAVE_LAUNCH_PROXY="${WEAVE_BIN} launch-proxy --with-dns -H unix:///var/run/weave.sock -H tcp://${address}:${WEAVE_PROXY_PORT}"
     echo ${WEAVE_LAUNCH_PROXY}
     ${ssh_cmd} ${WEAVE_LAUNCH_PROXY}
+
 
     #WEAVE_EXPOSE="${WEAVE_BIN} expose"
     #echo ${WEAVE_EXPOSE}
     #${ssh_cmd} ${WEAVE_EXPOSE}
+
 
     if [[ ${i} -gt 1 ]]; then
         WEAVE_CONNECT="${WEAVE_BIN} connect ${ROOT_NODE_ADDRESS}"
@@ -72,6 +76,9 @@ do
     else
         ROOT_NODE_ADDRESS=${address}
     fi
+
+    # launch weave scope
+    ${ssh_cmd} scope launch
 done
 
 
@@ -96,7 +103,6 @@ do
     weave_proxy_endpoint="${address}:${WEAVE_PROXY_PORT}"
 
     ## Next, we restart the slave agents
-    #docker ${DOCKER_CLIENT_ARGS} rm -f swarm-agent
     docker_client_args=""
     ${ssh_cmd} docker ${docker_client_args} run \
         -d \
@@ -109,4 +115,4 @@ done
 
 
 # we assume the node executing this script as a manager
-docker run -d -p 3376:2375 swarm manage token://${swarm_dicovery_token}
+docker run -d -p 3377:2375 swarm manage token://${swarm_dicovery_token}
