@@ -10,6 +10,7 @@ FILENAME=$1
 
 #
 WEAVE_BIN=/usr/local/bin/weave
+WEAVE_SCOPE_BIN=/usr/local/bin/scope
 
 # Weave Network Domain
 WEAVE_NETWORK_DOMAIN="weave.local"
@@ -46,13 +47,10 @@ do
     else
         address=$(dig +short ${host})
     fi
-    echo -e " -> host ${host} (ip: ${address}) is leaving the WEAVE network ...."
+    echo -e "\n\n-> host ${host} (ip: ${address}) is leaving the WEAVE network ...."
 
     ssh_cmd="ssh ${host}"
-    echo $ssh_cmd
-    ${ssh_cmd} sh -- -c << EOF
-        docker ps -a | grep 'swarm' | awk '{print $1}' | xargs docker rm -f
-EOF
-
+    ${ssh_cmd} "x=`docker ps -a | grep swarm | cut -d' ' -f1 `; echo '$x'; if [[ -n '${x}' ]]; then docker rm -f '${x}'; fi;"
     ${ssh_cmd} "${WEAVE_BIN} stop"
+    ${ssh_cmd} "${WEAVE_SCOPE_BIN} stop"
 done
