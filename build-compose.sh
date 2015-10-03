@@ -54,7 +54,7 @@ cp ~/.ssh/*.pub ${PUBLIC_KEYS_DIR}/
 if [[ ${multi_host} == true ]]; then
     CLIENT_VOLUMES=""
     VOLUMES_FROM=""
-    NFS_MOUNTS="/usr/local/lib,/usr/local/bin,/opt/hadoop/logs"
+    NFS_MOUNTS="/opt/hadoop/logs"
     NFS_PARAMS=" --nfs-mounts ${NFS_MOUNTS}"
 else
     NFS_PARAMS=""
@@ -137,7 +137,7 @@ namenode:
     - DNSDOCK_ALIAS=namenode
     - SERVICE_NAME=namenode
     - SERVICE_REGION=${DOCKER_ENVIRONMENT}
-    #- "affinity:container!=*datanode*"
+    - "affinity:container!=*datanode*"
   dns: ${DOCKER_ENVIRONMENT_DNS}
   dns_search: ${DOCKER_CONTAINER_DOMAIN}
   command: start-namenode.sh ${NFS_PARAMS}
@@ -153,7 +153,8 @@ datanode:
   environment:
     - SERVICE_NAME=datanode
     - SERVICE_REGION=${DOCKER_ENVIRONMENT}
-    #- "affinity:container!=*namenode*"
+    - "affinity:container!=*namenode*"
+    - "affinity:container!=*datanode*"
   dns: ${DOCKER_ENVIRONMENT_DNS}
   dns_search: ${DOCKER_CONTAINER_DOMAIN}
   command: start-datanode.sh ${NFS_PARAMS}
@@ -175,7 +176,7 @@ resourcemanager:
     - DNSDOCK_ALIAS=resourcemanager
     - SERVICE_NAME=resourcemanager
     - SERVICE_REGION=${DOCKER_ENVIRONMENT}
-    #- "affinity:container!=*nodemanager*"
+    - "affinity:container!=*nodemanager*"
   dns: ${DOCKER_ENVIRONMENT_DNS}
   dns_search: ${DOCKER_CONTAINER_DOMAIN}
   command: start-resourcemanager.sh ${NFS_PARAMS}
@@ -190,7 +191,8 @@ nodemanager:
   environment:
     - SERVICE_NAME=nodemanager
     - SERVICE_REGION=${DOCKER_ENVIRONMENT}
-    #- "affinity:container!=*resourcemanager*"
+    - "affinity:container!=*resourcemanager*"
+    - "affinity:container!=*nodemanager*"
   ports:
     - "8042:8042"
   dns: ${DOCKER_ENVIRONMENT_DNS}
