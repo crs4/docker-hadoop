@@ -92,18 +92,24 @@ function find_exposed_service_infos_by_port(){
         local service_domain=$(${docker_cmd} inspect --format="{{ .Config.Domainname }}" ${service_id})
         local service_mapping=$(${docker_cmd} ps | egrep -o  [0-9]\{1,3\}\(\.[0-9]\{1,3\}\)\{1,3\}:[0-9]+\-\>${service_port}/${service_protocol})
 
-        local service_public_ip=$(ssh ${docker_user}@${docker_host} curl ipinfo.io/ip)
+
         local service_container_ip=$(${docker_cmd} inspect --format="{{ .NetworkSettings.IPAddress }}" ${service_id})
         local service_fq_hostname=${service_hostname}
         if [[ -n ${service_domain} ]]; then
             service_fq_hostname="${service_hostname}.${service_domain}"
         fi
+
         if [[ ${service_container_ip} == "0.0.0.0" ]]; then
             service_container_ip=${docker_host}
         fi
+
+        local service_public_ip=""
         local service_host_ip=$(echo ${service_mapping} | cut -d':' -f1)
         if [[ ${service_host_ip} == "0.0.0.0" ]]; then
             service_host_ips=$(/sbin/ifconfig | egrep "inet (addr:)?" | awk '{print $2}' | tr '\n' '|')
+            service_public_ip=$(ssh ${docker_user}@${docker_host} curl ipinfo.io/ip)
+        else
+            service_public_ip=$(ssh ${docker_user}@${service_container_ip} curl ipinfo.io/ip)
         fi
         if [[ ${public_only} == true ]]; then
             service_infos=("${service_infos} ${service_id},${service_port},${service_port},${service_hostname},${service_domain},${service_fq_hostname},${service_public_ip}" )
