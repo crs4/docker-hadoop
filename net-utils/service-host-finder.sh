@@ -79,57 +79,56 @@ fi
 # infos of services
 declare -a service_infos
 
-#
+# find the ip address of the host/container running the service @ port/protocol
 function find_exposed_service_infos_by_port(){
-
+    # set the input parameters: port, protocol
     local service_port=$1;
     local service_protocol=$2;
 
+    # services matching the <port,protocol> pair
     local service_containers_=$(${docker_cmd} ps | egrep [0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}:[0-9]+\-\>${service_port}/${service_protocol} | awk '{print $1}')
     local service_containers=$(echo ${service_containers_} | tr ' ' '\n' | sort -u | tr '\n' ' ')
-    for service_id in ${service_containers}; do
+    for service_id in ${service_containers[@]}; do
+
+        # get the service hostname
         local service_hostname=$(${docker_cmd} inspect --format="{{ .Config.Hostname }}" ${service_id})
         local service_domain=$(${docker_cmd} inspect --format="{{ .Config.Domainname }}" ${service_id})
-        local service_mapping=$(${docker_cmd} ps | egrep -o  [0-9]\{1,3\}\(\.[0-9]\{1,3\}\)\{1,3\}:[0-9]+\-\>${service_port}/${service_protocol})
 
-
-        local service_container_ip=$(${docker_cmd} inspect --format="{{ .NetworkSettings.IPAddress }}" ${service_id})
+        # set the fully qualified servie hostname
         local service_fq_hostname=${service_hostname}
         if [[ -n ${service_domain} ]]; then
             service_fq_hostname="${service_hostname}.${service_domain}"
         fi
 
-        if [[ ${service_container_ip} == "0.0.0.0" ]]; then
-            service_container_ip=${docker_host}
-        fi
+        # find the host-service mapping
+        local service_mapping=$(${docker_cmd} ps | grep ${service_id} | egrep -o  [0-9]\{1,3\}\(\.[0-9]\{1,3\}\)\{1,3\}:[0-9]+\-\>${service_port}/${service_protocol})
 
-        local service_public_ip=""
-        local service_host_ip=$(echo ${service_mapping} | cut -d':' -f1)
-        if [[ ${service_host_ip} == "0.0.0.0" ]]; then
-            service_host_ips=$(/sbin/ifconfig | egrep "inet (addr:)?" | awk '{print $2}' | tr '\n' '|')
-            service_public_ip=$(ssh ${docker_user}@${docker_host} curl ipinfo.io/ip)
-        else
-            service_public_ip=$(ssh ${docker_user}@${service_container_ip} curl ipinfo.io/ip)
-        fi
+        # get service container ip
+        local service_container_ip=$(${docker_cmd} inspect --format="{{ .NetworkSettings.IPAddress }}" ${service_id})
+        # get the ip of the docker host
+        local service_host_ip=$(docker inspect --format="{{ .Node.IP }}" ${service_id})
+        # get the public ip of the docker host
+        local service_public_ip=$(ssh ${docker_user}@${docker_host} "curl ipinfo.io/ip")
+
+        # define the table entry
         if [[ ${public_only} == true ]]; then
             service_infos=("${service_infos} ${service_id},${service_port},${service_port},${service_hostname},${service_domain},${service_fq_hostname},${service_public_ip}" )
         elif [[ ${container_only} == true ]]; then
             service_infos=("${service_infos} ${service_id},${service_port},${service_port},${service_hostname},${service_domain},${service_fq_hostname},${service_container_ip}" )
         elif [[ ${host_only} == true ]]; then
-            service_infos=("${service_infos} ${service_id},${service_port},${service_port},${service_hostname},${service_domain},${service_fq_hostname},${service_host_ips}" )
+            service_infos=("${service_infos} ${service_id},${service_port},${service_port},${service_hostname},${service_domain},${service_fq_hostname},${service_host_ip}" )
         else
-            service_infos=("${service_infos} ${service_id},${service_port},${service_port},${service_hostname},${service_domain},${service_fq_hostname},${service_container_ip}|${service_public_ip}|${service_host_ips}")
+            service_infos=("${service_infos} ${service_id},${service_port},${service_port},${service_hostname},${service_domain},${service_fq_hostname},${service_container_ip}|${service_host_ip}|${service_public_ip}")
         fi
 
         # NOTE: decomment for debugging
-#        echo "ID: ${service_id}"
-#        echo "HOST: ${service_fq_hostname}"
-#        echo "PORT: ${service_port}"
-#        echo "Container IP: ${service_container_ip}"
-#        echo "Public IP: ${service_public_ip}"
-#        echo $services[@]
+        # echo "ID: ${service_id}"
+        # echo "HOST: ${service_fq_hostname}"
+        # echo "PORT: ${service_port}"
+        # echo "Container IP: ${service_container_ip}"
+        # echo "Public IP: ${service_public_ip}"
+        # echo $services[@]
     done
-    return 0;
 }
 
 
