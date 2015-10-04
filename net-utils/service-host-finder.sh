@@ -156,8 +156,8 @@ if [[ ${#service_infos[@]} -gt 0 ]]; then
 fi
 
 # tags for host table entries
-START_TAG="##DOCKER-HADOOP-SERVICES##"
-END_TAG="##DOCKER-HADOOP-SERVICE##"
+START_TAG="##DOCKER-HADOOP-SERVICES>>"
+END_TAG=">>DOCKER-HADOOP-SERVICES##"
 
 # update the service host table
 if [[ ${save_hosts} == true ]]; then
@@ -173,7 +173,7 @@ if [[ ${save_hosts} == true ]]; then
     echo -e "\n*** Host Entries ***"
     echo -e ${table}
     # save host entries to the $output_file
-    sudo sed -i -f "/${START_TAG}/,/${END_TAG}/d" ${output_file}
+    sudo sed -i "/${START_TAG}/,/${END_TAG}/d" ${output_file}
     sudo -- sh -c "echo '${table}' >> ${output_file}"
 fi
 
