@@ -14,7 +14,7 @@ usage() {
 }
 
 # parse arguments
-OPTS=`getopt -o d: --long external-dns,nfs-mounts: -n 'parse-options' -- "$@"`
+OPTS=`getopt -o d --long external-dns,nfs-mounts: -n 'parse-options' -- "$@"`
 
 # check parsing result
 if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; usage; exit 1 ; fi
@@ -24,7 +24,7 @@ eval set -- "${OPTS}"
 while true; do
   case "$1" in
     --external-dns ) external-dns=true; shift;;
-    -d ) background_mode="$1"; shift ;;
+    -d ) background_mode=true; shift ;;
     --nfs-mounts ) nfs_enabled="true"; nfs_shared_paths="${2}" shift; shift ;;
     -- ) shift; break ;;
     * ) break ;;
@@ -34,11 +34,11 @@ done
 
 #  update the DNS table if needed
 if [[ ${external_dns} == true ]]; then
-	echo "- Using external DNS ..."
+	echo "Using external DNS ..."
 else
+	echo "Updating /etc/hosts..."
 	update-etc-hosts
 fi
-
 
 
 # initializes shared folders
@@ -58,16 +58,13 @@ start-nodemanager.sh -d
 start-historyserver.sh -d
 
 # check the arguments
-if [[ $# -gt 1 ]]; then  	
-	# init user folders
-	init-folders.sh
-	# set parameters
-	user=${1}
-	script=${2}
-	shift 2
-  	# executes the arguments as bash script
-	sudo -u ${user} ${script} $@
-else
-  	# start open SSH server in foreground mode	
+if [[ ${background_mode} == true ]]; then
+	# start open SSH server in foreground mode
 	start-container.sh
+elif [[ -n $1 ]]; then
+  	# exec a command as default user
+	sudo -E -u ${UNPRIV_USER} $@
+else
+    # enable a shell with the default user
+	su -l ${UNPRIV_USER}
 fi
