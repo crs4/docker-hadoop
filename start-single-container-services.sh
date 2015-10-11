@@ -63,7 +63,7 @@ fi
 
 # start a new container for running tests and examples
 docker_mode="-it --rm"
-if [[ $IS_DAEMON = true ]]; then docker_mode="-d"; fi;
+if [[ $IS_DAEMON = true ]]; then docker_mode="-d"; docker_cmd_mode="-d"; fi;
 docker run ${docker_mode} \
     -v ${WORKING_DIR}:/shared \
     -v ${SHARED_DIRS_BASE}/libraries/system/lib:/usr/local/lib \
@@ -84,4 +84,4 @@ docker run ${docker_mode} \
     -e SERVICE_NAME="${HADOOP_VERSION//.}" \
     -e SERVICE_REGION=hadoop \
     ${DOCKERHUB_REPOSITORY_PREFIX}-${HADOOP_VERSION} \
-    start-hadoop-services ${COMMAND}
+    start-hadoop-services ${docker_cmd_mode} ${COMMAND}
