@@ -8,13 +8,18 @@ FROM kikkomep/docker-hadoop-base
 # Set HADOOP ENV
 ENV HADOOP_HOME /opt/hadoop
 ENV HADOOP_CONF_DIR ${HADOOP_HOME}/etc/hadoop
+ENV HADOOP_DATA_DIR ${HADOOP_HOME}/data
+ENV HADOOP_LOG_DIR ${HADOOP_HOME}/logs
+ENV HDFS_DATA_DIR ${HADOOP_DATA_DIR}/hdfs
+ENV YARN_DATA_DIR ${HADOOP_DATA_DIR}/yarn
+
 RUN echo "export HADOOP_HOME=${HADOOP_HOME}" >> /home/${UNPRIV_USER}/.profile
 RUN echo "export HADOOP_CONF_DIR=${HADOOP_CONF_DIR}" >> /home/${UNPRIV_USER}/.profile
 
 # Update $PATH to include ${HADOOP_HOME}/bin
 ENV PATH ${PATH}:${HADOOP_HOME}/bin:${HADOOP_HOME}/sbin
 RUN echo "export PATH=${PATH}:${HADOOP_HOME}/bin:${HADOOP_HOME}/sbin" >> /etc/profile 
-RUN echo "export PATH=${PATH}:${HADOOP_HOME}/bin:${HADOOP_HOME}/sbin:/home/${UNPRIV_USER}/.local/bin" >> home/${UNPRIV_USER}/.profile
+RUN echo "export PATH=${PATH}:${HADOOP_HOME}/bin:${HADOOP_HOME}/sbin:/home/${UNPRIV_USER}/.local/bin" >> /home/${UNPRIV_USER}/.profile
 
 # Copy 'hadoop-admin' scripts
 ADD scripts/start-resourcemanager.sh ${HADOOP_ADMIN_SCRIPTS}/start-resourcemanager.sh
