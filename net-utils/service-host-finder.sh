@@ -27,12 +27,13 @@ usage() {
     echo -e "\t   --host-only                    only host addresses"
     echo -e "\t   --container-only               only container addresses"
     echo -e "\t   --clean                        remove host entries from your file, e.g., /etc/hosts (default)"
+    echo -e "\t   --help                         print usage"
     echo -e "\n\n"
     exit 1;
 }
 
 # parse arguments
-OPTS=`getopt -o h:p:u:o: --long host:,port:,user:,save-hosts,clean,output:,public-only,host-only,container-only -n 'parse-options' -- "$@"`
+OPTS=`getopt -o h:p:u:o: --long host:,port:,user:,save-hosts,clean,output:,public-only,host-only,container-only,help -n 'parse-options' -- "$@"`
 
 # check parsing result
 if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; usage; exit 1 ; fi
@@ -60,10 +61,17 @@ while true; do
     --host-only ) host_only=true; shift;;
     --container-only ) container_only=true; shift;;
     --clean ) clean=true; shift;;
+    --help ) help=true; shift;;
     -- ) shift; break ;;
     * ) break ;;
   esac
 done
+
+if [[ ${help} == true ]]; then
+    usage
+    exit 0
+fi
+
 
 # check output file path is not a dir
 if [[ -d ${output_file} ]]; then
