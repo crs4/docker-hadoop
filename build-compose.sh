@@ -67,8 +67,8 @@ read -r -d '' CLIENT_VOLUMES << EOM
     - ${SHARED_DIRS_BASE}/libraries/root-user/lib:/root/.local/lib
     - ${SHARED_DIRS_BASE}/libraries/aen-user/bin:/home/aen/.local/bin
     - ${SHARED_DIRS_BASE}/libraries/aen-user/lib:/home/aen/.local/lib
-    - ${SHARED_DIRS_BASE}/hadoop-data:/${SHARING_MOUNT_POINT}/opt/hadoop/data
-    - ${SHARED_DIRS_BASE}/hadoop-logs:/${SHARING_MOUNT_POINT}/opt/hadoop/logs
+    - ${SHARED_DIRS_BASE}/hadoop-data:/opt/hadoop/data
+    - ${SHARED_DIRS_BASE}/hadoop-logs:/opt/hadoop/logs
 EOM
 read -r -d '' VOLUMES_FROM << EOM
   volumes_from:
