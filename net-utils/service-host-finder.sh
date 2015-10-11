@@ -84,6 +84,12 @@ if [[ -n ${docker_port} ]]; then
     docker_host_option="tcp://${docker_host}:${docker_port}"
 fi
 
+# get the public ip of the docker host
+if [[ ${host_only} == false && ${container_only} == false ]]; then
+    echo "Login to the docker host: ${docker_user}@${docker_host} ...."
+    service_public_ip=$(ssh ${docker_user}@${docker_host} "curl ipinfo.io/ip")
+fi
+
 # infos of services
 declare -a service_infos
 
@@ -115,8 +121,9 @@ function find_exposed_service_infos_by_port(){
         local service_container_ip=$(${docker_cmd} inspect --format="{{ .NetworkSettings.IPAddress }}" ${service_id})
         # get the ip of the docker host
         local service_host_ip=$(docker inspect --format="{{ .Node.IP }}" ${service_id})
-        # get the public ip of the docker host
-        local service_public_ip=$(ssh ${docker_user}@${docker_host} "curl ipinfo.io/ip")
+        if [[ ${service_host_ip} =~ "no value" ]]; then
+            service_host_ip=${docker_host}
+        fi
 
         # define the table entry
         if [[ ${public_only} == true ]]; then
