@@ -77,9 +77,8 @@ EOM
 fi
 
 # build the docker-compose.yml
+if [[ -n ${NFS_PARAMS} ]]; then
 cat <<END > "${WORKING_DIR}/docker-compose.yml"
-
-# FIXME: add DNS container
 nfs:
   image: ${DOCKERHUB_REPOSITORY_PREFIX}-nfs-server
   hostname: nfs
@@ -95,8 +94,15 @@ nfs:
   dns: ${DOCKER_ENVIRONMENT_DNS}
   dns_search: ${DOCKER_CONTAINER_DOMAIN}
   command: ${SHARING_MOUNT_POINT}
+END
+else
+  echo "" > ${WORKING_DIR}/docker-compose.yml
+fi
 
+cat <<END >> "${WORKING_DIR}/docker-compose.yml"
 
+# alternative DNS container:
+# works only on a single Docker Host
 #dnsdock:
 #  image: tonistiigi/dnsdock
 #  name: dnsdock
