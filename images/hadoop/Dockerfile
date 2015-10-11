@@ -5,9 +5,6 @@
 # Set base image
 FROM kikkomep/docker-base
 
-# Set HDFS data path
-ENV HDFS_DATA_DIR opt/hadoop/data/hdfs
-
 # Set admin-utils
 ENV HADOOP_ADMIN_SCRIPTS /opt/admin-utils
 RUN mkdir ${HADOOP_ADMIN_SCRIPTS}
