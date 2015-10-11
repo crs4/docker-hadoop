@@ -45,6 +45,9 @@ RUN useradd -m ${UNPRIV_USER} -s /bin/bash && \
     echo "${UNPRIV_USER}:hadoop" | chpasswd && \
     echo "export PATH=${PATH}:/home/${UNPRIV_USER}/.local/bin" >> /home/${UNPRIV_USER}/.profile
 
+# Set the working dir
+WORKDIR /home/${UNPRIV_USER}
+
 # add aen to the admin group    
 RUN groupadd admin
 RUN usermod  -a -G admin $UNPRIV_USER
