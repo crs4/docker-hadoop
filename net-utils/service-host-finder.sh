@@ -181,20 +181,30 @@ END_TAG=">>DOCKER-HADOOP-SERVICES##"
 
 # update the service host table
 if [[ ${save_hosts} == true ]]; then
-    table=${START_TAG}
+    table=""
     for i in ${service_infos[@]}; do
         IFS="," read -ra service <<< "${i}"
         for j in $(echo ${service[6]} | tr '|' ' '); do
             table="${table}\n${j}\t${service[5]}"
         done
     done
-    table="${table}\n${END_TAG}"
+
+    # remove duplicates
+    table=$(echo -e ${table} | sort | tr -s ' ' | uniq)
+
     # print host entries
     echo -e "\n*** Host Entries ***"
     echo -e ${table}
     # save host entries to the $output_file
-    sudo sed -i "/${START_TAG}/,/${END_TAG}/d" ${output_file}
-    sudo -- sh -c "echo '${table}' >> ${output_file}"
+    cmd_prefix=""
+    if [[ ${output_file} == "/etc/hosts" ]]; then
+        cmd_prefix="sudo "
+    fi
+
+    if [[ -f ${output_file} ]]; then
+        ${cmd_prefix} sed -if "/${START_TAG}/,/${END_TAG}/d" ${output_file}
+    fi
+    ${cmd_prefix} sh -c "echo '${START_TAG}${table}\n${END_TAG}' >> ${output_file}"
 fi
 
 
