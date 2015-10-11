@@ -14,7 +14,7 @@ if [[ ${nfs_enabled} == true ]]; then
         mkdir -p "${SHARING_MOUNT_POINT}${mnt}"
         chown -R ${UNPRIV_USER}:${UNPRIV_USER} "${SHARING_MOUNT_POINT}${mnt}"
         ln -s "${SHARING_MOUNT_POINT}${mnt}" ${mnt}
-	chown -R ${UNPRIV_USER}:${UNPRIV_USER} ${mnt}
+	    chown -R ${UNPRIV_USER}:${UNPRIV_USER} ${mnt}
     done
 
     # user folder on the sharing mount point
