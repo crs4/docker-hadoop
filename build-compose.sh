@@ -30,6 +30,12 @@ fi
 DOCKERHUB_REPOSITORY_PREFIX=${1}
 HADOOP_VERSION=${2}
 
+# current path
+CURRENT_PATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+# load base config
+source ./config.sh
+
 # set domain & environment
 export DOCKER_DOMAIN="docker"
 export DOCKER_ENVIRONMENT="hadoop"

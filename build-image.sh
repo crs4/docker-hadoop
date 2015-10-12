@@ -3,6 +3,9 @@
 # current path
 CURRENT_PATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
+# load base config
+source ./config.sh
+
 # images path
 IMAGES_PATH="${CURRENT_PATH}/images"
 
