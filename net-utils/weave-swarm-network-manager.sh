@@ -52,7 +52,9 @@ function weave_node_launch(){
     fi
 
     ${cmd_prefix} ${WEAVE_BIN} launch-router ${init_peer_count} --dns-domain=${WEAVE_NETWORK_DOMAIN}
-    ${cmd_prefix} ${WEAVE_BIN} launch-proxy --with-dns -H tcp://${node_ip_address}:${WEAVE_PROXY_PORT} -H unix:///var/run/weave.sock
+    ${cmd_prefix} ${WEAVE_BIN} launch-proxy --with-dns \
+                  -H tcp://${node_ip_address}:${WEAVE_PROXY_PORT}
+                  #-H unix:///var/run/weave.sock
     if [[ ${node_peer_ip_address_to_connect} != "--" ]]; then
         ${cmd_prefix} ${WEAVE_BIN} connect ${node_peer_ip_address_to_connect}
     fi
