@@ -52,5 +52,7 @@ ${CURRENT_PATH}/build-compose.sh --external-dns ${DOCKERHUB_REPOSITORY_IMAGE_PRE
 docker-compose up -d # no-project name
 
 # print info of running services
-echo -e "\n *** Running Services ... "
+echo -e "\n****************************************************************"
+echo -e "*** Running Services ... "
+echo -e "*******************************************************************\n\n"
 docker-compose ps

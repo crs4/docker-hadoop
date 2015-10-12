@@ -54,5 +54,7 @@ docker-compose up -d client # start nfs first
 docker-compose up -d # no-project name
 
 # print info of running services
-echo -e "\n *** Running Services ... "
+echo -e "\n****************************************************************"
+echo -e "*** Running Services ... "
+echo -e "*******************************************************************\n\n"
 docker-compose ps
