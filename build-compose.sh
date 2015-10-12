@@ -36,21 +36,6 @@ CURRENT_PATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 # load base config
 source ./config.sh
 
-# set domain & environment
-export DOCKER_DOMAIN="docker"
-export DOCKER_ENVIRONMENT="hadoop"
-export DOCKER_CONTAINER_DOMAIN="${DOCKER_ENVIRONMENT}.${DOCKER_DOMAIN}.local"
-
-# set default DNS for containers
-export DOCKER_ENVIRONMENT_DNS="172.17.42.1"
-
-# set the working dir
-export WORKING_DIR="$(pwd)"
-export SHARED_DIRS_BASE="${WORKING_DIR}/docker-hadoop"
-
-# Set shared NFS folder
-SHARING_MOUNT_POINT=/sharing
-
 # copy public keys
 PUBLIC_KEYS_DIR=${WORKING_DIR}/keys
 mkdir -p ${PUBLIC_KEYS_DIR}
