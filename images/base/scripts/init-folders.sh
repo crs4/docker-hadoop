@@ -1,4 +1,4 @@
 #!/bin/bash
 
-mkdir -p /home/aen/.local
-chown -R aen:aen /home/aen
+mkdir -p /home/${DEFAULT_USER}/.local
+chown -R ${DEFAULT_USER}:${DEFAULT_USER} /home/${DEFAULT_USER}

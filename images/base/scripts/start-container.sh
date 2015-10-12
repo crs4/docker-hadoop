@@ -49,13 +49,13 @@ init-shared-folders ${nfs_enabled} ${nfs_shared_paths}
 shared_keys_path="/shared/keys"
 if [[ -d "${shared_keys_path}" ]]; then
 	mkdir -p /root/.ssh
-	mkdir -p /home/aen/.ssh
+	mkdir -p /home/${DEFAULT_USER}/.ssh
 	keys=($(ls ${shared_keys_path}/*.pub))
 	for key in "${keys[@]}"
 	do
 		echo "Copying key ${key} ..."
 		cat ${key} >> /root/.ssh/authorized_keys
-		cat ${key} >> /home/aen/.ssh/authorized_keys
+		cat ${key} >> /home/${DEFAULT_USER}/.ssh/authorized_keys
 	done
 fi
 
