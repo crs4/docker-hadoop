@@ -3,7 +3,7 @@
 #----------------------------------------------------
 
 # Set base image
-FROM kikkomep/docker-base
+FROM crs4/docker-base
 
 RUN apt-get update -qq && apt-get install -y nfs-kernel-server runit inotify-tools -qq
 RUN mkdir -p /exports

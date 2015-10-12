@@ -3,7 +3,7 @@
 #----------------------------------------------------
 
 # Set base image
-FROM kikkomep/docker-base
+FROM crs4/docker-base
 
 # Set admin-utils
 ENV HADOOP_ADMIN_SCRIPTS /opt/admin-utils

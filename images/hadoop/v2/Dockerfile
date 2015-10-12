@@ -3,7 +3,7 @@
 #----------------------------------------------------
 
 # Set hadoop-2.x as base image
-FROM kikkomep/docker-hadoop-base
+FROM crs4/docker-hadoop-base
 
 # Set HADOOP ENV
 ENV HADOOP_HOME /opt/hadoop
