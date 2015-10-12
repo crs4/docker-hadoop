@@ -1,0 +1,5 @@
+#!/bin/bash
+
+DOCKER_HOST_IP=$(echo ${DOCKER_HOST:6} | cut -d':' -f 1)
+
+sudo route -n add 172.17.0.0/16 ${DOCKER_HOST_IP}
