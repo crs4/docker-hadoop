@@ -40,17 +40,17 @@ ENV JAVA_HOME /usr/lib/jvm/java-${JAVA_VERSION}-oracle
 RUN echo "export JAVA_HOME=${JAVA_HOME}" >> /etc/profile
 
 # add default unprivileged user (Alfred E. Neuman, "What? Me worry?")
-ENV UNPRIV_USER aen
-RUN useradd -m ${UNPRIV_USER} -s /bin/bash && \
-    echo "${UNPRIV_USER}:hadoop" | chpasswd && \
-    echo "export PATH=${PATH}:/home/${UNPRIV_USER}/.local/bin" >> /home/${UNPRIV_USER}/.profile
+ENV DEFAULT_USER hduser
+RUN useradd -m ${DEFAULT_USER} -s /bin/bash && \
+    echo "${DEFAULT_USER}:hadoop" | chpasswd && \
+    echo "export PATH=${PATH}:/home/${DEFAULT_USER}/.local/bin" >> /home/${DEFAULT_USER}/.profile
 
 # Set the working dir
-WORKDIR /home/${UNPRIV_USER}
+WORKDIR /home/${DEFAULT_USER}
 
-# add aen to the admin group    
+# add ${DEFAULT_USER} to the admin group
 RUN groupadd admin
-RUN usermod  -a -G admin $UNPRIV_USER
+RUN usermod  -a -G admin ${DEFAULT_USER}
 
 # disable ipv6
 RUN echo "net.ipv6.conf.all.disable_ipv6 = 1"     >> /etc/sysctl.conf && \
@@ -81,7 +81,7 @@ RUN mkdir -p /root/.ssh && \
     echo "NoHostAuthenticationForLocalhost=yes" >> ~/.ssh/config
 
 # set dir permissions
-RUN chown -R aen /opt
+RUN chown -R ${DEFAULT_USER} /opt
     
 # Add script for downloading and installing pydoop
 ADD scripts/download-pydoop.sh /usr/bin/download-pydoop
