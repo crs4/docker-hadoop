@@ -15,13 +15,12 @@ DOCKERHUB_IMAGE_PREFIX="docker"
 # image prefix
 DOCKERHUB_REPOSITORY_IMAGE_PREFIX="${DOCKERHUB_REPOSITORY}/${DOCKERHUB_IMAGE_PREFIX}-"
 
-
 # image to build
-IMAGE_NAME=${1}
+HADOOP_DISTRO=${1}
 
 
 # check whether the name has been provided
-if [[ -z "$IMAGE_NAME" ]]; then	
+if [[ -z "$HADOOP_DISTRO" ]]; then
 	echo "You have to provide the name of the image to build (e.g., hadoop-2.6.0)"
 	exit -1
 fi
@@ -50,8 +49,8 @@ function update_image_prefix(){
 
 
 # detect distro and version
-DISTRO=${IMAGE_NAME%-*}
-VERSION=${IMAGE_NAME#*-}
+DISTRO=${HADOOP_DISTRO%-*}
+VERSION=${HADOOP_DISTRO#*-}
 VERSION_PARTS=(${VERSION//\./ })
 echo -e "\n - DISTRO:  ${DISTRO}"
 echo -e " - VERSION: ${VERSION}"
