@@ -71,8 +71,8 @@ read -r -d '' CLIENT_VOLUMES << EOM
     - ${SHARED_DIRS_BASE}/libraries/system/bin:/usr/local/bin
     - ${SHARED_DIRS_BASE}/libraries/root-user/bin:/root/.local/bin
     - ${SHARED_DIRS_BASE}/libraries/root-user/lib:/root/.local/lib
-    - ${SHARED_DIRS_BASE}/libraries/aen-user/bin:/home/aen/.local/bin
-    - ${SHARED_DIRS_BASE}/libraries/aen-user/lib:/home/aen/.local/lib
+    - ${SHARED_DIRS_BASE}/libraries/${DEFAULT_USER}-user/bin:/home/${DEFAULT_USER}/.local/bin
+    - ${SHARED_DIRS_BASE}/libraries/${DEFAULT_USER}-user/lib:/home/${DEFAULT_USER}/.local/lib
     - ${SHARED_DIRS_BASE}/hadoop-data:/opt/hadoop/data
     - ${SHARED_DIRS_BASE}/hadoop-logs:/opt/hadoop/logs
 EOM
@@ -86,7 +86,7 @@ fi
 if [[ -n ${NFS_PARAMS} ]]; then
 cat <<END > "${WORKING_DIR}/docker-compose.yml"
 nfs:
-  image: ${DOCKERHUB_REPOSITORY_PREFIX}-nfs-server
+  image: ${DOCKERHUB_REPOSITORY_PREFIX}nfs-server
   hostname: nfs
   container_name: nfs
   domainname: ${DOCKER_CONTAINER_DOMAIN}
@@ -107,19 +107,8 @@ fi
 
 cat <<END >> "${WORKING_DIR}/docker-compose.yml"
 
-# alternative DNS container:
-# works only on a single Docker Host
-#dnsdock:
-#  image: tonistiigi/dnsdock
-#  name: dnsdock
-#  container_name: dnsdock
-#  volumes:
-#    - /var/run/docker.sock:/var/run/docker.sock
-#  ports:
-#    - "172.17.42.1:53:53/udp"
-  
 client:
-  image: ${DOCKERHUB_REPOSITORY_PREFIX}-${HADOOP_VERSION}
+  image: ${DOCKERHUB_REPOSITORY_PREFIX}${HADOOP_VERSION}
   name: client
   hostname: client
   domainname: ${DOCKER_CONTAINER_DOMAIN}
@@ -135,7 +124,7 @@ client:
   ${CLIENT_VOLUMES}
 
 namenode:
-  image: ${DOCKERHUB_REPOSITORY_PREFIX}-${HADOOP_VERSION}
+  image: ${DOCKERHUB_REPOSITORY_PREFIX}${HADOOP_VERSION}
   name: namenode
   hostname: namenode
   domainname: ${DOCKER_CONTAINER_DOMAIN}
@@ -155,7 +144,7 @@ namenode:
   command: start-namenode.sh --update-hostname ${NFS_PARAMS}
 
 datanode:
-  image: ${DOCKERHUB_REPOSITORY_PREFIX}-${HADOOP_VERSION}
+  image: ${DOCKERHUB_REPOSITORY_PREFIX}${HADOOP_VERSION}
   name: datanode
   #hostname: datanode
   domainname: ${DOCKER_CONTAINER_DOMAIN}
@@ -172,7 +161,7 @@ datanode:
   command: start-datanode.sh --update-hostname ${NFS_PARAMS}
     
 resourcemanager:
-  image: ${DOCKERHUB_REPOSITORY_PREFIX}-${HADOOP_VERSION}
+  image: ${DOCKERHUB_REPOSITORY_PREFIX}${HADOOP_VERSION}
   name: resourcemanager
   hostname: resourcemanager
   domainname: ${DOCKER_CONTAINER_DOMAIN}
@@ -194,7 +183,7 @@ resourcemanager:
   command: start-resourcemanager.sh --update-hostname ${NFS_PARAMS}
 
 nodemanager:
-  image: ${DOCKERHUB_REPOSITORY_PREFIX}-${HADOOP_VERSION}
+  image: ${DOCKERHUB_REPOSITORY_PREFIX}${HADOOP_VERSION}
   name: nodemanager
   #hostname: nodemanager
   domainname: ${DOCKER_CONTAINER_DOMAIN}
@@ -213,7 +202,7 @@ nodemanager:
   command: start-nodemanager.sh --update-hostname ${NFS_PARAMS}
     
 historyserver:
-  image: ${DOCKERHUB_REPOSITORY_PREFIX}-${HADOOP_VERSION}
+  image: ${DOCKERHUB_REPOSITORY_PREFIX}${HADOOP_VERSION}
   name: historyserver  
   hostname: historyserver
   domainname: ${DOCKER_CONTAINER_DOMAIN}
