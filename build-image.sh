@@ -12,19 +12,43 @@ DOCKERHUB_REPOSITORY="crs4"
 # the dockerhub image prefix
 DOCKERHUB_IMAGE_PREFIX="docker"
 
-# image prefix
-DOCKERHUB_REPOSITORY_IMAGE_PREFIX="${DOCKERHUB_REPOSITORY}/${DOCKERHUB_IMAGE_PREFIX}-"
+# print usage
+usage() {
+    echo -e "\nUsage: $0 [-r|--repository <crs4>] [-p|--prefix <docker>] HADOOP_DISTRO";
+    echo -e "       e.g.: $0 -r crs4 -p docker hadoop-2.7.1";
+    exit 1;
+}
+
+# parse arguments
+OPTS=`getopt -o r:p: --long "repository:,prefix:" -n 'parse-options' -- "$@"`
+
+# check parsing result
+if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; usage; exit 1 ; fi
+
+# process arguments
+eval set -- "$OPTS"
+while true; do
+  case "$1" in
+    -r | --repository ) DOCKERHUB_REPOSITORY="$2"; shift; shift ;;
+    -p | --prefix ) DOCKERHUB_IMAGE_PREFIX="$2"; shift; shift ;;
+    --help ) usage; exit 0; shift ;;
+    -- ) shift; break ;;
+    * ) break ;;
+  esac
+done
+
 
 # image to build
 HADOOP_DISTRO=${1}
 
-
 # check whether the name has been provided
 if [[ -z "$HADOOP_DISTRO" ]]; then
-	echo "You have to provide the name of the image to build (e.g., hadoop-2.6.0)"
+	usage
 	exit -1
 fi
 
+# image prefix
+DOCKERHUB_REPOSITORY_IMAGE_PREFIX="${DOCKERHUB_REPOSITORY}/${DOCKERHUB_IMAGE_PREFIX}-"
 
 # fixes image repository
 function update_image_prefix(){
