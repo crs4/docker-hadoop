@@ -13,12 +13,12 @@ USE_EXTERNAL_DNS=false
 
 # print usage
 usage() { 
-    echo "Usage: $0 [-r|--repository <REPOSITORY>] [-p|--prefix <IMAGE_PREFIX>] [-v|--hadoop-version <develop>] [-d] [--external-dns]"
+    echo "Usage: $0 [-r|--repository <REPOSITORY>] [-p|--prefix <IMAGE_PREFIX>] [-d] [--external-dns] <HADOOP_DISTRO>"
     exit 1; 
 }
 
 # parse arguments
-OPTS=`getopt -o r:p:v:c:d --long "prefix,repository,hadoop-version:,command:,external-dns" -n 'parse-options' -- "$@"`
+OPTS=`getopt -o r:p:c:d --long "prefix,repository,command:,external-dns" -n 'parse-options' -- "$@"`
 
 # check parsing result
 if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; usage; exit 1 ; fi
@@ -28,8 +28,7 @@ eval set -- "$OPTS"
 while true; do
   case "$1" in
     -r | --repository ) DOCKERHUB_REPOSITORY="$2"; shift; shift ;;
-    -p | --prefix ) DOCKERHUB_IMAGE_PREFIX="$2"; shift; shift ;;
-    -v | --hadoop-version ) HADOOP_VERSION="$2"; shift; shift ;;
+    -p | --prefix ) DOCKERHUB_IMAGE_PREFIX="$2"; shift; shift ;;    
     -c | --command ) COMMAND="$2"; shift; shift;;
     -d ) IS_DAEMON=true; shift;;
     --help ) usage; exit 0; shift;;
@@ -38,6 +37,11 @@ while true; do
     * ) break ;;
   esac
 done
+
+# sets the Hadoop version to use
+if [[ -n "${1}" ]]; then
+	HADOOP_VERSION=${1}
+fi
 
 # image prefix
 DOCKERHUB_REPOSITORY_IMAGE_PREFIX="${DOCKERHUB_REPOSITORY}/${DOCKERHUB_IMAGE_PREFIX}-"
@@ -58,9 +62,6 @@ cp ~/.ssh/*.pub ${PUBLIC_KEYS_DIR}/
 
 # set default DNS for containers
 DOCKER_ENVIRONMENT_DNS="172.17.42.1"
-
-# set the base path of the shared directories
-SHARED_DIRS_BASE=${WORKING_DIR}/docker-hadoop
 
 # starts DNS service if required
 if [[ ${USE_EXTERNAL_DNS} == true ]]; then
