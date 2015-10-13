@@ -6,16 +6,21 @@ DOCKERHUB_REPOSITORY="crs4"
 DOCKERHUB_IMAGE_PREFIX="docker"
 # set default hadoop version
 HADOOP_VERSION="hadoop-2.7.1"
-
+# init swarm cluster flag
+INIT_SWARM_CLUSTER=false
+# cluster config file
+CLUSTER_CONFIG_FILE="cluster.config"
+# swarm cluster admin user
+CLUSTER_ADMIN_USER=${USER}
 
 # print usage
 usage() {
-    echo "Usage: $0 [-r|--repository <REPOSITORY>] [-p|--prefix <IMAGE_PREFIX>] [-d] [--external-dns] <HADOOP_DISTRO>"
+    echo "Usage: $0 [-r|--repository <REPOSITORY>] [-p|--prefix <IMAGE_PREFIX>] [--init-swarm] [-d] [--external-dns] <HADOOP_DISTRO>"
     exit 1;
 }
 
 # parse arguments
-OPTS=`getopt -o r:p:d --long "prefix,repository,external-dns" -n 'parse-options' -- "$@"`
+OPTS=`getopt -o r:p:d --long "prefix,repository,init-swarm,admin-user:,cluster-config:,external-dns" -n 'parse-options' -- "$@"`
 
 # check parsing result
 if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; usage; exit 1 ; fi
@@ -26,7 +31,10 @@ while true; do
   case "$1" in
     -r | --repository ) DOCKERHUB_REPOSITORY="$2"; shift; shift ;;
     -p | --prefix ) DOCKERHUB_IMAGE_PREFIX="$2"; shift; shift ;;
+    --cluster-config ) CLUSTER_CONFIG_FILE="$2"; shift; shift ;;	
+    --admin-user ) CLUSTER_ADMIN_USER="$2"; shift; shift ;;	
     -d ) IS_DAEMON=true; shift;;
+    --init-swarm ) INIT_SWARM_CLUSTER=true; shift;;
     --help ) usage; exit 0; shift;;
     --external-dns ) USE_EXTERNAL_DNS=true; shift;;
     -- ) shift; break ;;
@@ -47,6 +55,25 @@ CURRENT_PATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 # load base config
 source ${CURRENT_PATH}/config.sh
+
+# init swarm cluster if required
+if [[ ${INIT_SWARM_CLUSTER} == true ]]; then
+	# restore old docker host config
+	if [[ -n ${DOCKER_SWARM_HOST} ]]; then
+		DOCKER_HOST=${DOCKER_SWARM_HOST}
+	fi
+	# loads default network config
+	source net-utils/network-config.sh
+	# launches the swarm cluster
+	net-utils/weave-swarm-network-manager.sh \
+		--swarm --config ${CLUSTER_CONFIG_FILE} \
+		--admin ${CLUSTER_ADMIN_USER} launch	
+	# save current Docker host config
+	DOCKER_SWARM_HOST=${DOCKER_HOST}
+	# update env to run with swarm manager	
+	DOCKER_HOST="tcp://${DOCKER_HOST_IP}:${SWARM_MANAGER_PORT}"
+fi
+
 
 # buid the docker-compose file
 ${CURRENT_PATH}/build-compose.sh --multi-host --external-dns ${DOCKERHUB_REPOSITORY_IMAGE_PREFIX} ${HADOOP_VERSION}
