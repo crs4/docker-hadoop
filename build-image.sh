@@ -17,7 +17,7 @@ DOCKERHUB_IMAGE_PREFIX="docker"
 
 # print usage
 usage() {
-    echo -e "\nUsage: $0 [-r|--repository <crs4>] [-p|--prefix <docker>] HADOOP_DISTRO";
+    echo -e "\nUsage: $0 [-r|--repository <REPO_NAME>] [-p|--prefix <IMAGE_PREFIX>] <HADOOP_DISTRO>";
     echo -e "       e.g.: $0 -r crs4 -p docker hadoop-2.7.1";
     exit 1;
 }
