@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # set default DockerHub repository
-DOCKERHUB_REPOSITORY_PREFIX="${USER}/docker"
+DOCKERHUB_REPOSITORY="crs4"
+# set default image prefix
+DOCKERHUB_IMAGE_PREFIX="docker"
 # set default hadoop version
 HADOOP_VERSION="hadoop-2.7.1"
 # run as daemon flag
@@ -11,12 +13,12 @@ USE_EXTERNAL_DNS=false
 
 # print usage
 usage() { 
-    echo "Usage: $0 [-r <crs4/docker>] [-v | --hadoop-version <develop>] [-d] [--external-dns]"
+    echo "Usage: $0 [-r|--repository <REPOSITORY>] [-p|--prefix <IMAGE_PREFIX>] [-v|--hadoop-version <develop>] [-d] [--external-dns]"
     exit 1; 
 }
 
 # parse arguments
-OPTS=`getopt -o r:v:c:d --long "hadoop-version:,command:,external-dns" -n 'parse-options' -- "$@"`
+OPTS=`getopt -o r:p:v:c:d --long "prefix,repository,hadoop-version:,command:,external-dns" -n 'parse-options' -- "$@"`
 
 # check parsing result
 if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; usage; exit 1 ; fi
@@ -25,21 +27,26 @@ if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; usage; exit 1 ; fi
 eval set -- "$OPTS"
 while true; do
   case "$1" in
-    -r ) DOCKERHUB_REPOSITORY_PREFIX="$2"; shift; shift ;;
+    -r | --repository ) DOCKERHUB_REPOSITORY="$2"; shift; shift ;;
+    -p | --prefix ) DOCKERHUB_IMAGE_PREFIX="$2"; shift; shift ;;
     -v | --hadoop-version ) HADOOP_VERSION="$2"; shift; shift ;;
     -c | --command ) COMMAND="$2"; shift; shift;;
     -d ) IS_DAEMON=true; shift;;
+    --help ) usage; exit 0; shift;;
     --external-dns ) USE_EXTERNAL_DNS=true; shift;;
     -- ) shift; break ;;
     * ) break ;;
   esac
 done
 
-# set compose project name
-DOCKER_COMPOSE_PROJECT="" #"${HADOOP_VERSION}"
+# image prefix
+DOCKERHUB_REPOSITORY_IMAGE_PREFIX="${DOCKERHUB_REPOSITORY}/${DOCKERHUB_IMAGE_PREFIX}-"
 
 # current path
 CURRENT_PATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+# load base config
+source ${CURRENT_PATH}/config.sh
 
 # working directory
 WORKING_DIR="$(pwd)"
@@ -70,8 +77,8 @@ docker run ${docker_mode} \
     -v ${SHARED_DIRS_BASE}/libraries/system/bin:/usr/local/bin \
     -v ${SHARED_DIRS_BASE}/libraries/root-user/bin:/root/.local/bin \
     -v ${SHARED_DIRS_BASE}/libraries/root-user/lib:/root/.local/lib \
-    -v ${SHARED_DIRS_BASE}/libraries/aen-user/bin:/home/aen/.local/bin \
-    -v ${SHARED_DIRS_BASE}/libraries/aen-user/lib:/home/aen/.local/lib \
+    -v ${SHARED_DIRS_BASE}/libraries/${DEFAULT_USER}-user/bin:/home/${DEFAULT_USER}/.local/bin \
+    -v ${SHARED_DIRS_BASE}/libraries/${DEFAULT_USER}-user/lib:/home/${DEFAULT_USER}/.local/lib \
     -v ${SHARED_DIRS_BASE}/hadoop-data:/opt/hadoop/data \
     -v ${SHARED_DIRS_BASE}/hadoop-logs:/opt/hadoop/logs \
     -p 2222:22 \
@@ -83,5 +90,5 @@ docker run ${docker_mode} \
     --name "${HADOOP_VERSION//.}" \
     -e SERVICE_NAME="${HADOOP_VERSION//.}" \
     -e SERVICE_REGION=hadoop \
-    ${DOCKERHUB_REPOSITORY_PREFIX}-${HADOOP_VERSION} \
+    ${DOCKERHUB_REPOSITORY_IMAGE_PREFIX}${HADOOP_VERSION} \
     start-hadoop-services ${docker_cmd_mode} ${COMMAND}

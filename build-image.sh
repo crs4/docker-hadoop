@@ -3,6 +3,9 @@
 # current path
 CURRENT_PATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
+# load base config
+source ./config.sh
+
 # images path
 IMAGES_PATH="${CURRENT_PATH}/images"
 
@@ -84,38 +87,37 @@ DOCKER_BUILD_CMD="docker build -t ${DOCKERHUB_REPOSITORY_IMAGE_PREFIX}"
 
 # build the base image
 echo -e "\n - Building the base image..."
-${DOCKER_BUILD_CMD}base ${IMAGES_PATH}/base
+${DOCKER_BUILD_CMD}base "${IMAGES_PATH}/base"
 
 # build the base image
 echo -e "\n - Building the nfs-server image..."
-update_image_prefix ${IMAGES_PATH}/nfs-server nfs-server
-${DOCKER_BUILD_CMD}nfs-server ${IMAGES_PATH}/nfs-server
-
+update_image_prefix "${IMAGES_PATH}/nfs-server"
+${DOCKER_BUILD_CMD}nfs-server "${IMAGES_PATH}/nfs-server"
 
 # build the selected hadoop distro
 if [[ -d "${IMAGES_PATH}/${DISTRO}" ]]; then
 
 	# distro base image
 	echo -e "\n - Building the '${DISTRO}' base image..."
-	update_image_prefix ${IMAGES_PATH}/${DISTRO}
-	${DOCKER_BUILD_CMD}${DISTRO}-base ${IMAGES_PATH}/${DISTRO}
+	update_image_prefix "${IMAGES_PATH}/${DISTRO}"
+	${DOCKER_BUILD_CMD}${DISTRO}-base "${IMAGES_PATH}/${DISTRO}"
 
 	# distro version base image
 	if [[ -d "${IMAGES_PATH}/${DISTRO}/v${VERSION_PARTS[0]}/version/${VERSION}" ]]; then
 		
 		# build the base image for the distro
 		echo -e "\n - Building the image for the '${DISTRO}' distro v${VERSION_PARTS[0]} ..."
-		update_image_prefix ${IMAGES_PATH}/${DISTRO}/v${VERSION_PARTS[0]}
-		${DOCKER_BUILD_CMD}${DISTRO}-v${VERSION_PARTS[0]} ${IMAGES_PATH}/${DISTRO}/v${VERSION_PARTS[0]}
+		update_image_prefix "${IMAGES_PATH}/${DISTRO}/v${VERSION_PARTS[0]}"
+		${DOCKER_BUILD_CMD}${DISTRO}-v${VERSION_PARTS[0]} "${IMAGES_PATH}/${DISTRO}/v${VERSION_PARTS[0]}"
 		
 		# download dist version
 		hadoop_archive_path="${IMAGES_PATH}/${DISTRO}/v${VERSION_PARTS[0]}/version/${VERSION}"
-		${IMAGES_PATH}/${DISTRO}/scripts/download-hadoop.sh ${VERSION} ${hadoop_archive_path}
+		${IMAGES_PATH}/${DISTRO}/scripts/download-hadoop.sh "${VERSION} ${hadoop_archive_path}"
 		
 		# build the version image	
 		echo -e "\n - Building the '${DISTRO}-${VERSION}' image..."
-		update_image_prefix ${IMAGES_PATH}/${DISTRO}/v${VERSION_PARTS[0]}/version/${VERSION}
-		${DOCKER_BUILD_CMD}${DISTRO}-${VERSION} ${IMAGES_PATH}/${DISTRO}/v${VERSION_PARTS[0]}/version/${VERSION}
+		update_image_prefix "${IMAGES_PATH}/${DISTRO}/v${VERSION_PARTS[0]}/version/${VERSION}"
+		${DOCKER_BUILD_CMD}${DISTRO}-${VERSION} "${IMAGES_PATH}/${DISTRO}/v${VERSION_PARTS[0]}/version/${VERSION}"
 			
 	else
 		echo -e "\n *** WARNING: version ${VERSION} of the '${DISTRO}' distro not supported !!! \n"

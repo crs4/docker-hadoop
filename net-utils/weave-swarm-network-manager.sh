@@ -244,13 +244,19 @@ fi
 
 
 # loads the list of hosts
-load_host_list
+if [[ ${network_mode} != "local" ]]; then
+    if [[ -f ${host_list_filename} ]]; then
+        load_host_list
+    else
+        echo "Config file not found!!!"
+    fi
+fi
 
 
-# parses the command
+# processes the command
 if [[ ${network_mode} == "local" ]]; then
     if [[ ${cmd} == "launch" ]]; then
-        weave_node_launch $DOCKER_HOST_IP "" ""
+        weave_node_launch $DOCKER_HOST_IP "--" ""
 
     elif [[ ${cmd} == "stop" ]]; then
         weave_node_stop
