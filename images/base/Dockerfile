@@ -60,7 +60,7 @@ RUN echo "net.ipv6.conf.all.disable_ipv6 = 1"     >> /etc/sysctl.conf && \
     echo "net.ipv6.conf.lo.disable_ipv6 = 1"      >>  /etc/sysctl.conf
 
 # java_opts for disabling IPv6
-ENV _JAVA_OPTIONS "-Djava.net.preferIPv4Stack=true"
+#ENV _JAVA_OPTIONS "-Djava.net.preferIPv4Stack=true"
 
 # add script for updating the hostname within /etc/hosts
 ADD scripts/update-hostname.sh /usr/bin/update-hostname
