@@ -207,7 +207,7 @@ weave=true
 
 # prints usage
 usage() {
-    echo -e "\nUsage: $0 --config <CLUSTER_CONFIG> [--weave] [--swarm] [--admin <ADMIN_USER>] < launch | stop | help >"
+    echo -e "\nUsage: $0 --config <CLUSTER_CONFIG> [--weave] [--swarm] [--admin <ADMIN_USER>] < launch | stop | help > <REMOTE_HOST_ADDRESS>"
     echo -e ""
     exit 1;
 }
@@ -234,7 +234,13 @@ done
 
 
 # sets the main command
-cmd=$1
+cmd=${1}
+
+# sets the address of the remote host
+remote_address="--"
+if [[ -n ${2} ]]; then
+    remote_address=${2}
+fi
 
 # prints usage if required
 if [[ ${cmd} == "help" ]]; then
@@ -256,7 +262,7 @@ fi
 # processes the command
 if [[ ${network_mode} == "local" ]]; then
     if [[ ${cmd} == "launch" ]]; then
-        weave_node_launch $DOCKER_HOST_IP "--" ""
+        weave_node_launch ${DOCKER_HOST_IP} ${remote_address} ""
 
     elif [[ ${cmd} == "stop" ]]; then
         weave_node_stop
