@@ -37,7 +37,7 @@ As a general strategy to use *docker-hadoop* you have to:
 * start `docker-hadoop` image version (e.g., hadoop-2.6.0) in a *single-container*, *multi-container* or *Docker cluster* mode (see below);
 * login via ssh the *client container* (or run a new shell attached to the running container), which allows you to interact with the dockerized Hadoop services (i.e., HDFS, ResourceManager).
 
-###### Client container [client-container] ######
+###### Client container
 
 In order to use the dockerized Hadoop services running in a single container or multiple containers you have to access to the *client container* (which is the only active when you run *docker-hadoop* in *single-container mode*).
 
@@ -72,7 +72,7 @@ In this mode, all Hadoop services run within a single container. You can run the
 
 * *interactive mode*: all Hadoop services will be started within a container and a bash shell will be attached to it in order for you to immediately use Hadoop services (e.g., submitting a job, exploring the HDFS, etc.);
  
-* *background mode*: all Hadoop services will be started within a background container and you have to access to that container in order to use Hadoop services (see [client container][client-container]).
+* *background mode*: all Hadoop services will be started within a background container and you have to access to that container in order to use Hadoop services (see [client container]).
 
 
 ### Multi Container (single host)
