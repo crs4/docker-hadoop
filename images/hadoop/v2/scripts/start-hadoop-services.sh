@@ -60,7 +60,7 @@ start-historyserver.sh -d
 # check the arguments
 if [[ ${background_mode} == true ]]; then
 	# start open SSH server in foreground mode
-	start-container.sh
+	start-container.sh -d
 elif [[ -n $1 ]]; then
   	# exec a command as default user
 	sudo -E -u ${DEFAULT_USER} $@
