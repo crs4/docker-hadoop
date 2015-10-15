@@ -13,7 +13,7 @@ USE_EXTERNAL_DNS=false
 
 # print usage
 usage() { 
-    echo "Usage: $0 [-r|--repository <REPOSITORY>] [-p|--prefix <IMAGE_PREFIX>] [-d] [--external-dns] <HADOOP_DISTRO>"
+    echo "Usage: $0 [-r|--repository <REPOSITORY>] [-p|--prefix <IMAGE_PREFIX>] [-c <COMMAND>][-d] [--external-dns] <HADOOP_DISTRO>"
     exit 1; 
 }
 
