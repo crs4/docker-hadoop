@@ -30,7 +30,7 @@ To run **docker-hadoop**, your machine(s) must meet the following requirements:
 Additional software for OS X users is required and available on Homebrew (see [Homebrew Install][5] to install Homebrew): *python 2.7, gnu-sed, coreutils, gnu-getopt*.
 
 ## How to use
-All required Docker images are available on the DockerHub CRS4 repository and are automatically pulled when needed, but you can also locally build the required images (see [How to build images](#build-images)).
+All required Docker images are available on the DockerHub CRS4 repository and are automatically pulled when needed, but you can also locally build the required images (see [How to build 'docker-hadoop' images]).
 
 As a general strategy to use *docker-hadoop* you have to:
 
@@ -88,7 +88,7 @@ The option `--init-weave` can be omitted if a Weave Network is already running a
 Finally, you have to access to the *client container* to use Hadoop services via command line interface (CLI).
 
 
-### Multi Container (multi host): Docker Cluster [multi-container] ###
+### Multi Container (multi host): Docker Cluster
 
 In order to start *docker-hadoop* on a Docker cluster you have to provide a configuration file containing the hostnames of the Docker hosts which compose the cluster.
 
@@ -111,11 +111,11 @@ To autoconfigure a Swarm cluster over a Weave Network and start Hadoop services,
 
 If you already have a running Swarm cluster over a Weave network, you can omit the options `--init-swarm`, `cluster-config` and `admin-user`.
 
-As in [multi container (single host)][multi-container] above, you have to access to the *client container* to use Hadoop services via command line interface (CLI).
+As in [Multi container (single host)] above, you have to access to the *client container* to use Hadoop services via command line interface (CLI).
  
 ## Details
 
-### How to build 'docker-hadoop' images [build-images]
+### How to build 'docker-hadoop' images
 
 
 To build the *docker-hadoop* images you can use the provided script `build-image` with the following syntax:
@@ -133,7 +133,7 @@ To build the *docker-hadoop* images you can use the provided script `build-image
  
  As an example, the command `./build-image.sh hadoop-2.6.0` produces the image named `crs4/docker-hadoop-2.6.0`.
  
-### Update your /etc/hosts ### 
+### Update your /etc/hosts 
 
 In order to easily use the Web Console apps of the Hadoop services you have to update your /etc/hosts in such a way that hostnames of the containers running the Hadoop services are correctly resolved. This can be easily done using the `net-utils/service-host-finder.sh` script:
 
@@ -171,7 +171,7 @@ Finally, you can access the Web Console apps of the main Hadoop services directl
 * **NameNode** @ [http://namenode.hadoop.docker.local:50070](http://namenode.hadoop.docker.local:50070)
 
 
-### Setup a Weave Network [setup-weave-network]
+### Setup a Weave Network
 
 To setup a Weave network you can follow the [Weave Getting Started Guides][7]. Alternatively you can use the provided script `net-utils/weave-swarm-network-manager.sh`:
 
@@ -190,7 +190,7 @@ Finally, update your environment to use the weave tools:
     $ eval $(weave env)
 
 
-### Setup a Swarm Cluster over a Weave Network [setup-swarm-weave]
+### Setup a Swarm Cluster over a Weave Network
 
 There are several strategies to setup a Docker Swarm cluster (see [Docker Swarm][8]). Alternatively you can use `net-utils/weave-swarm-network-manager.sh` script above with the additional option `--swarm`.
 
