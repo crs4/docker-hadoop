@@ -105,7 +105,7 @@ client:
     - SERVICE_REGION=${DOCKER_ENVIRONMENT}
   dns: ${DOCKER_ENVIRONMENT_DNS}
   dns_search: ${DOCKER_CONTAINER_DOMAIN}
-  command: start-container.sh ${EXTERNAL_DNS_OPTS} ${NFS_PARAMS}
+  command: start-container.sh -d ${EXTERNAL_DNS_OPTS} ${NFS_PARAMS}
   ${CLIENT_VOLUMES}
 
 namenode:
