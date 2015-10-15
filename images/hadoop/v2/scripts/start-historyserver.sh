@@ -38,6 +38,9 @@ fi
 # initializes shared folders
 init-shared-folders ${nfs_enabled} ${nfs_shared_paths}
 
+# fixes an error message which occurs when $USER is empty
+export HADOOP_MAPRED_IDENT_STRING=root
+
 # Start the JobHistory server
 ${HADOOP_HOME}/sbin/mr-jobhistory-daemon.sh start historyserver --config $HADOOP_CONF_DIR
 

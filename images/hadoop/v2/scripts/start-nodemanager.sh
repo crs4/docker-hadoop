@@ -42,6 +42,9 @@ init-shared-folders ${nfs_enabled} ${nfs_shared_paths}
 # bind the nodemanager hostname
 sudo sed -i -e "/\/configuration/ i\<property><name>yarn.nodemanager.hostname<\/name><value>$(hostname)<\/value><\/property>" ${HADOOP_CONF_DIR}/hdfs-site.xml
 
+# fixes an error message which occurs when $USER is empty
+export YARN_IDENT_STRING=root
+
 # Start the NodeManager
 ${HADOOP_HOME}/sbin/yarn-daemon.sh --config $HADOOP_CONF_DIR start nodemanager
 
