@@ -12,22 +12,22 @@ Currently, it provides support for the following Hadoop distributions:
 ####Supported working modes:
 
 1. **single-container:** all hadoop services run within a single Docker container, exposing all services to the Docker host;
-1. **multi-container:** every service runs in a different container; an additional container, the 'client' container, is used to connect to the client and interact with it;
+1. **multi-container:** every service runs in a different container; an additional container, the 'client' container, is used to connect to the Hadoop services and interact with them;
 1. **multi-host-multi-container**: multiple Docker hosts constitute a Docker cluster and every Hadoop service runs in a different container deployed to one of the Docker cluster nodes. A *client* container is used to access to the dockerized Hadoop cluster.
  
 
  
 ## Requirements
 
-To run **docker-hadoop** your machine(s) must meet the following requirements:
+To run **docker-hadoop**, your machine(s) must meet the following requirements:
 
-- **docker** (>1.6.0): follow [Docker Supported installation][1] to install Docker on your platform. Please be sure the Docker daemon (on every host) is listening on an host port (e.g., default 2375): this can be obtained by setting the DOCKER\_OPTS env with the paramter `-H tcp://<HOST_IP>:<DOCKER_HOST>` (e.g., `-H tcp://0.0.0.0:2375`)
-- **docker-compose** (>1.3.0): see [Install Docker Compose][2]
+- **docker** (>1.6.0): follow [Docker Supported installation][1] to install Docker on your platform. Please be sure the Docker daemon (on every host) is listening on an host port (e.g., default 2375): this can be obtained by setting the DOCKER\_OPTS env with the paramter `-H tcp://<HOST_IP>:<DOCKER_HOST>` (e.g., `-H tcp://0.0.0.0:2375`);
+- **docker-compose** (>1.3.0): see [Install Docker Compose][2];
 - **swarm** (>0.4.0): Docker automatically pulls the Docker Swarm image when needed;
-- **weave** (>1.1.0): see [Weave installation][3]
-- **weave scope** (>0.8.0) (optional): see [Weave Scope Getting Started][4]
+- **weave** (>1.1.0): see [Weave installation][3];
+- **weave scope** (>0.8.0) (optional): see [Weave Scope Getting Started][4].
 
-Additional software for OS X users available on Homebrew (see [Homebrew Install][5] to install Homebrew): python 2.7, gnu-sed, coreutils, gnu-getopt.
+Additional software for OS X users is required and available on Homebrew (see [Homebrew Install][5] to install Homebrew): *python 2.7, gnu-sed, coreutils, gnu-getopt*.
 
 ## How to use
 All required Docker images are available on the DockerHub CRS4 repository and are automatically pulled when needed, but you can also locally build the required images (see [How to build images](#build-images)).
@@ -35,11 +35,11 @@ All required Docker images are available on the DockerHub CRS4 repository and ar
 As a general strategy to use *docker-hadoop* you have to:
 
 * start `docker-hadoop` image version (e.g., hadoop-2.6.0) in a *single-container*, *multi-container* or *Docker cluster* mode (see below);
-* login via ssh the client container (run a new sheel attached to the running container), which allows you to interact with the dockerized Hadoop services (i.e., HDFS, ResourceManager).
+* login via ssh the *client container* (or run a new shell attached to the running container), which allows you to interact with the dockerized Hadoop services (i.e., HDFS, ResourceManager).
 
 ###### Client container [client-container] ######
 
-In order to use the dockerized Hadoop services running in a single container or multiple containers you have access to the *client container* (which is the only active when you run *docker-hadoop* in *single-container mode*).
+In order to use the dockerized Hadoop services running in a single container or multiple containers you have to access to the *client container* (which is the only active when you run *docker-hadoop* in *single-container mode*).
 
 There are two different strategies to access to the client container:
 
@@ -53,7 +53,7 @@ There are two different strategies to access to the client container:
 	
 	    $ ssh -p 32775 hduser@<DOCKER_HOST_IP>
 	
-	where `hduser` is the default user (the corresponding password is: `hadoop`) and `DOCKER_HOST_IP` the ip address of you docker host.
+	where `hduser` is the default user (the corresponding password is: `hadoop`) and `DOCKER_HOST_IP` is the ip address of you Docker host.
 
 	
 2. *exec new attached shell*: you can execute a new shell attached to the running client container by means of the following command:
@@ -83,14 +83,14 @@ The simplest way to start **docker-hadoop** in multi-container mode is to use th
 ./start-multi-container-services.sh --init-weave hadoop-2.6.0
 ```
 
-The option `--init-weave` can be omitted if a Weave Network is already running and properly configured i.e., WeaveDNS would be configured with the *docker-hadoop* domain (default domain is *hadoop.docker.local*).
+The option `--init-weave` can be omitted if a Weave Network is already running and properly configured such that WeaveDNS uses the *docker-hadoop* domain (default domain is *hadoop.docker.local*).
 
 Finally, you have to access to the *client container* to use Hadoop services via command line interface (CLI).
 
 
 ### Multi Container (multi host): Docker Cluster [multi-container] ###
 
-In order to start *hadoop-docker* on a Docker cluster you have to provide a configuration file containing the hostnames of the Docker hosts which compose the cluster.
+In order to start *docker-hadoop* on a Docker cluster you have to provide a configuration file containing the hostnames of the Docker hosts which compose the cluster.
 
 An example of cluster configuration file (e.g., `cluster.config`):
 
@@ -128,14 +128,14 @@ To build the *docker-hadoop* images you can use the provided script `build-image
  
  The available options are:
  
- * `-r | --repository <REPO_NAME>`: the repository which the docker image has to build associated (e.g., `crs4`, which is the default) ;
- * `-p | --prefix <IMAGE_PREFIX>`: the prefix to give to the building image (e.g., `docker-`, which is the default).
+ * `-r | --repository <REPO_NAME>`: the tag repository of the Docker image (e.g., `crs4`, which is the default) ;
+ * `-p | --prefix <IMAGE_PREFIX>`: the prefix of the Docker image name (e.g., `docker-`, which is the default).
  
- As an example, the command `./build-image.sh hadoop-2.6.0` produces the image `crs4/docker-hadoop-2.6.0`.
+ As an example, the command `./build-image.sh hadoop-2.6.0` produces the image named `crs4/docker-hadoop-2.6.0`.
  
 ### Update your /etc/hosts ### 
 
-In order to easily use the Wev Console of the Hadoop services you have to update your /etc/hosts in such a way that hostnames of the containers running the Hadoop services are correctly resolved. This can be easily done using the `net-utils/service-host-finder.sh`:
+In order to easily use the Web Console apps of the Hadoop services you have to update your /etc/hosts in such a way that hostnames of the containers running the Hadoop services are correctly resolved. This can be easily done using the `net-utils/service-host-finder.sh` script:
 
 	Usage: net-utils/service-host-finder.sh [options] [service_port/service_protocol[,...]
 	       Available options:
@@ -150,7 +150,7 @@ In order to easily use the Wev Console of the Hadoop services you have to update
 		   --clean                        remove host entries from your file, e.g., /etc/hosts (default)
 		   --help                         print usage
 
-For example, if you want resolve the hostnames of the containers running Hadoop services to their corresponding Docker hosts, you can digit:
+For example, if you want to resolve the hostnames of the containers running Hadoop services to their corresponding Docker hosts, you can digit:
 
     $ net-utils/service-host-finder.sh --save-hosts --host-only \
 	              8088/tcp,8042/tcp,19888/tcp,50070/tcp
@@ -164,7 +164,7 @@ which updates your `/etc/hosts` with a new set of entries like the following:
 	10.211.55.7	resourcemanager.hadoop.docker.local
 	>>DOCKER-HADOOP-SERVICES##
 
-Finally, you can access the Web Console of the main Hadoop services directly from your browser using the following URLs:
+Finally, you can access the Web Console apps of the main Hadoop services directly from your browser using the following URLs:
 
 * **ResourceManager** @ [http://resourcemanager.hadoop.docker.local:8088](http://resourcemanager.hadoop.docker.local:8088)
 * **History Server** @ [http://historyserver.hadoop.docker.local:19888](http://namenode.hadoop.docker.local:19888)
