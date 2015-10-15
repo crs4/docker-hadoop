@@ -115,7 +115,7 @@ As in [multi container (single host)][multi-container] above, you have to access
  
 ## Details
 
-### How to build 'docker-hadoop' images [build-images] ###
+### How to build 'docker-hadoop' images [build-images]
 
 
 To build the *docker-hadoop* images you can use the provided script `build-image` with the following syntax:
@@ -171,7 +171,7 @@ Finally, you can access the Web Console apps of the main Hadoop services directl
 * **NameNode** @ [http://namenode.hadoop.docker.local:50070](http://namenode.hadoop.docker.local:50070)
 
 
-### Setup a Weave Network [setup-weave-network] ###
+### Setup a Weave Network [setup-weave-network]
 
 To setup a Weave network you can follow the [Weave Getting Started Guides][7]. Alternatively you can use the provided script `net-utils/weave-swarm-network-manager.sh`:
 
@@ -190,7 +190,7 @@ Finally, update your environment to use the weave tools:
     $ eval $(weave env)
 
 
-### Setup a Swarm Cluster over a Weave Network [setup-swarm-weave] ###
+### Setup a Swarm Cluster over a Weave Network [setup-swarm-weave]
 
 There are several strategies to setup a Docker Swarm cluster (see [Docker Swarm][8]). Alternatively you can use `net-utils/weave-swarm-network-manager.sh` script above with the additional option `--swarm`.
 
