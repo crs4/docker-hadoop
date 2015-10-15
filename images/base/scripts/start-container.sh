@@ -24,7 +24,7 @@ if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; usage; exit 1 ; fi
 eval set -- "${OPTS}"
 while true; do
   case "$1" in
-    -d ) background_mode="true"; shift ;;
+    -d ) background_mode=true; shift ;;
     --external-dns ) external_dns=true; shift;;
     --nfs-mounts ) nfs_enabled="true"; nfs_shared_paths="${2}"; shift; shift ;;
     -- ) shift; break ;;
@@ -59,6 +59,16 @@ if [[ -d "${shared_keys_path}" ]]; then
 	done
 fi
 
-# start open SSH server
-echo "OpenSSH service started"
-/usr/sbin/sshd -D
+
+# check the arguments
+if [[ ${background_mode} == true ]]; then
+	# start open SSH server in foreground mode
+	echo "OpenSSH service started"
+    /usr/sbin/sshd -D
+elif [[ -n $1 ]]; then
+  	# exec a command as default user
+	sudo -E -u ${DEFAULT_USER} $@
+else
+    # enable a shell with the default user
+	su -l ${DEFAULT_USER}
+fi
