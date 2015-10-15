@@ -35,3 +35,6 @@ ENV HADOOP_CUSTOM_CONF_DIR /opt/hadoop-v2-conf-base
 
 # Copy configuration files (hadoop v2)
 COPY config/* ${HADOOP_CUSTOM_CONF_DIR}/
+
+# Set the default command
+CMD ["start-hadoop-services"]
