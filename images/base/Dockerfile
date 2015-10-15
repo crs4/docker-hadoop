@@ -39,7 +39,7 @@ RUN add-apt-repository ppa:webupd8team/java && \
 ENV JAVA_HOME /usr/lib/jvm/java-${JAVA_VERSION}-oracle
 RUN echo "export JAVA_HOME=${JAVA_HOME}" >> /etc/profile
 
-# add default unprivileged user (Alfred E. Neuman, "What? Me worry?")
+# add default user
 ENV DEFAULT_USER hduser
 RUN useradd -m ${DEFAULT_USER} -s /bin/bash && \
     echo "${DEFAULT_USER}:hadoop" | chpasswd && \
