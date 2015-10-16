@@ -1,0 +1,12 @@
+# Ignore common IDEs
+.idea
+*.xcodeproj
+
+# hadoop dist archives
+images/**/*tar.gz
+
+# created docker-compose.yml
+docker-compose.yml
+
+# keys folder
+keys
