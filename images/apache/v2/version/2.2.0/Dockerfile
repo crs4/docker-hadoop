@@ -3,7 +3,7 @@
 ###############################################################################
 
 # Set hadoop-2.x as base image
-FROM crs4/docker-hadoop-v2
+FROM crs4/docker-apache-v2
 
 # set hadoop version
 ENV HADOOP_VERSION 2.2.0
