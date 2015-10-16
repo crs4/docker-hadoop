@@ -8,7 +8,7 @@ external_dns=false
 # print usage
 usage() {
     echo "Usage: $0 [--multi-host] [--external-dns] REPOSITORY_PREFIX HADOOP_VERSION"
-    echo -e "\t - e.g.: $0 --multi-host --external-dns crs4/docker hadoop-2.6.0"
+    echo -e "\t - e.g.: $0 --multi-host --external-dns crs4/docker apache-2.6.0"
     exit -1
 }
 
