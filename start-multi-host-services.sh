@@ -3,9 +3,9 @@
 # set default DockerHub repository
 DOCKERHUB_REPOSITORY="crs4"
 # set default image prefix
-DOCKERHUB_IMAGE_PREFIX="docker"
+DOCKERHUB_IMAGE_PREFIX="hadoop"
 # set default hadoop version
-HADOOP_VERSION="hadoop-2.7.1"
+HADOOP_VERSION="apache-2.7.1"
 # init swarm cluster flag
 INIT_SWARM_CLUSTER=false
 # cluster config file
