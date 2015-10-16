@@ -1,12 +1,12 @@
 ###############################################################################
-# Hadoop 2.7.1 image
+# Hadoop 2.4.1 image
 ###############################################################################
 
 # Set hadoop-2.x as base image
-FROM crs4/docker-hadoop-v2
+FROM crs4/hadoop-apache-v2
 
 # set hadoop version
-ENV HADOOP_VERSION 2.7.1
+ENV HADOOP_VERSION 2.4.1
 
 # set hadoop tar.gz archivename
 ENV HADOOP_ARCHIVE_TARGZ hadoop-${HADOOP_VERSION}.tar.gz

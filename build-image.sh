@@ -13,7 +13,7 @@ IMAGES_PATH="${CURRENT_PATH}/images"
 DOCKERHUB_REPOSITORY="crs4"
 
 # the dockerhub image prefix
-DOCKERHUB_IMAGE_PREFIX="docker"
+DOCKERHUB_IMAGE_PREFIX="hadoop"
 
 # print usage
 usage() {
@@ -112,7 +112,7 @@ if [[ -d "${IMAGES_PATH}/${DISTRO}" ]]; then
 		
 		# download dist version
 		hadoop_archive_path="${IMAGES_PATH}/${DISTRO}/v${VERSION_PARTS[0]}/version/${VERSION}"
-		${IMAGES_PATH}/${DISTRO}/scripts/download-hadoop.sh "${VERSION} ${hadoop_archive_path}"
+		${IMAGES_PATH}/${DISTRO}/scripts/download-hadoop.sh "${VERSION}" "${hadoop_archive_path}"
 		
 		# build the version image	
 		echo -e "\n - Building the '${DISTRO}-${VERSION}' image..."

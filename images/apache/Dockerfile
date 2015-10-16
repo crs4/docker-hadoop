@@ -3,7 +3,7 @@
 ###############################################################################
 
 # Set base image
-FROM crs4/docker-base
+FROM crs4/hadoop-base
 
 # Set admin-utils
 ENV HADOOP_ADMIN_SCRIPTS /opt/admin-utils
