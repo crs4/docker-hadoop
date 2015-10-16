@@ -34,7 +34,7 @@ All required Docker images are available on the DockerHub CRS4 repository and ar
 
 As a general strategy to use *docker-hadoop* you have to:
 
-* start `docker-hadoop` image version (e.g., hadoop-2.6.0) in a *single-container*, *multi-container* or *Docker cluster* mode (see below);
+* start `docker-hadoop` image version (e.g., apache-2.6.0) in a *single-container*, *multi-container* or *Docker cluster* mode (see below);
 * login via ssh the *client container* (or run a new shell attached to the running container), which allows you to interact with the dockerized Hadoop services (i.e., HDFS, ResourceManager).
 
 ###### Client container
@@ -46,7 +46,7 @@ There are two different strategies to access to the client container:
 1. *ssh login:* the client container runs an SSH server on the port 22 bounded to a port dynamically picked from the available ports of your Docker host. To see the ssh port, type `docker ps`:
 
         $ docker ps		 
-          429e05554172 crs4/docker-hadoop-2.6.0  "/w/w start-container" 3 hours ago   
+          429e05554172 crs4/hadoop-apache-2.6.0  "/w/w start-container" 3 hours ago   
 		               Up 3 hours  0.0.0.0:32775->22/tcp  dockerhadoop-client-1
     
 	In the example above the port is 32775 and you can login to the *client container* as follows:
@@ -77,10 +77,10 @@ In this mode, all Hadoop services run within a single container. You can run the
 
 ### Multi Container (single host)
 
-The simplest way to start **docker-hadoop** in multi-container mode is to use the command `start-multi-container-services`. As an esample, considering the `hadoop-2.6.0` Hadoop distribution, you can start the Hadoop services typing:
+The simplest way to start **docker-hadoop** in multi-container mode is to use the command `start-multi-container-services`. As an esample, considering the `apache-2.6.0` Hadoop distribution, you can start the Hadoop services typing:
 
 ```
-./start-multi-container-services.sh --init-weave hadoop-2.6.0
+./start-multi-container-services.sh --init-weave apache-2.6.0
 ```
 
 The option `--init-weave` can be omitted if a Weave Network is already running and properly configured such that WeaveDNS uses the *docker-hadoop* domain (default domain is *hadoop.docker.local*).
@@ -106,7 +106,7 @@ To autoconfigure a Swarm cluster over a Weave Network and start Hadoop services,
     ./start-multi-host-services.sh --init-swarm \
 	    --cluster-config cluster.config \
 		--admin-user ubuntu \
-		hadoop-2.6.0 
+		apache-2.6.0 
 
 
 If you already have a running Swarm cluster over a Weave network, you can omit the options `--init-swarm`, `cluster-config` and `admin-user`.
@@ -124,14 +124,14 @@ To build the *docker-hadoop* images you can use the provided script `build-image
 ./build-image.sh [options] <HADOOP_DISTRO>
 ```
 
- where `HADOOP_DISTRO` is the supported hadoop distribution to dockerized in a Docker image: e.g., `hadoop-2.6.0`.
+ where `HADOOP_DISTRO` is the supported hadoop distribution to dockerized in a Docker image: e.g., `apache-2.6.0`.
  
  The available options are:
  
  * `-r | --repository <REPO_NAME>`: the tag repository of the Docker image (e.g., `crs4`, which is the default) ;
- * `-p | --prefix <IMAGE_PREFIX>`: the prefix of the Docker image name (e.g., `docker-`, which is the default).
+ * `-p | --prefix <IMAGE_PREFIX>`: the prefix of the Docker image name (e.g., `hadoop-`, which is the default).
  
- As an example, the command `./build-image.sh hadoop-2.6.0` produces the image named `crs4/docker-hadoop-2.6.0`.
+ As an example, the command `./build-image.sh apache-2.6.0` produces the image named `crs4/hadoop-apache-2.6.0`.
  
 ### Update your /etc/hosts 
 
