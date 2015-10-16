@@ -38,6 +38,9 @@ fi
 # initializes shared folders
 init-shared-folders ${nfs_enabled} ${nfs_shared_paths}
 
+# fixes an error message which occurs when $USER is empty
+export HADOOP_IDENT_STRING=root
+
 # Start the DataNode
 ${HADOOP_HOME}/sbin/hadoop-daemon.sh --config $HADOOP_CONF_DIR start datanode
 
