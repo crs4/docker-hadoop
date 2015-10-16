@@ -1,5 +1,5 @@
 ###############################################################################
-# A basic java machine with java, basic services and iv6 disabled
+# A basic machine with java and other basic services
 ###############################################################################
 
 # Set Ubuntu as base image

@@ -38,6 +38,10 @@ fi
 # initializes shared folders
 init-shared-folders ${nfs_enabled} ${nfs_shared_paths}
 
+# fixes an error message which occurs when $USER is empty
+export USER="root"
+export HADOOP_IDENT_STRING="root"
+
 # Check whether the NameNode has been already formatted
 init_hdfs_folder=false;
 if [[ ! -d "${HDFS_DATA_DIR}" ]]; then
