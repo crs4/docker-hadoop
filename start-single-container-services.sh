@@ -86,6 +86,7 @@ docker run ${docker_mode} \
     -p 8088:8088 \
     -p 19888:19888 \
     -p 50070:50070 \
+    -h docker-hadoop \
     --dns=${DOCKER_ENVIRONMENT_DNS} \
     --dns=8.8.8.8 \
     --name "${HADOOP_VERSION//.}" \

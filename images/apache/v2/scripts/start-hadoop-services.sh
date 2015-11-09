@@ -45,6 +45,9 @@ fi
 init-shared-folders ${nfs_enabled} ${nfs_shared_paths}
 
 
+# update config
+hadoop-configurator.py --hadoop-conf-dir=/opt/hadoop/etc/hadoop --resourcemanager=docker-hadoop --namenode=docker-hadoop
+
 # FIXME
 # temporarily fix hdfs cache test when
 # when namenode is not localhost

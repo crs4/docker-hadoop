@@ -21,6 +21,8 @@ RUN apt-get update && \
                        openssh-server openssh-client \
                        dnsutils nano \
                        nfs-common inotify-tools
+# psutil
+RUN pip install psutil
                        
 
 # Install Java8 and set JAVA_HOME
