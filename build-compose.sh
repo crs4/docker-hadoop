@@ -126,7 +126,7 @@ namenode:
     - "affinity:container!=*datanode*"
   dns: ${DOCKER_ENVIRONMENT_DNS}
   dns_search: ${DOCKER_CONTAINER_DOMAIN}
-  command: start-namenode.sh --update-hostname ${NFS_PARAMS}
+  command: start-namenode.sh --update-hostname ${NFS_PARAMS} --update-config
 
 datanode:
   image: ${DOCKERHUB_REPOSITORY_PREFIX}${HADOOP_VERSION}
@@ -143,7 +143,7 @@ datanode:
     - "affinity:container!=*datanode*"
   dns: ${DOCKER_ENVIRONMENT_DNS}
   dns_search: ${DOCKER_CONTAINER_DOMAIN}
-  command: start-datanode.sh --update-hostname ${NFS_PARAMS}
+  command: start-datanode.sh --update-hostname ${NFS_PARAMS} --update-config
     
 resourcemanager:
   image: ${DOCKERHUB_REPOSITORY_PREFIX}${HADOOP_VERSION}
@@ -165,7 +165,7 @@ resourcemanager:
     - "affinity:container!=*nodemanager*"
   dns: ${DOCKER_ENVIRONMENT_DNS}
   dns_search: ${DOCKER_CONTAINER_DOMAIN}
-  command: start-resourcemanager.sh --update-hostname ${NFS_PARAMS}
+  command: start-resourcemanager.sh --update-hostname ${NFS_PARAMS} --update-config
 
 nodemanager:
   image: ${DOCKERHUB_REPOSITORY_PREFIX}${HADOOP_VERSION}
@@ -184,7 +184,7 @@ nodemanager:
   dns: ${DOCKER_ENVIRONMENT_DNS}
   dns_search: ${DOCKER_CONTAINER_DOMAIN}
   ${VOLUMES_FROM}
-  command: start-nodemanager.sh --update-hostname ${NFS_PARAMS}
+  command: start-nodemanager.sh --update-hostname ${NFS_PARAMS} --update-config
     
 historyserver:
   image: ${DOCKERHUB_REPOSITORY_PREFIX}${HADOOP_VERSION}
@@ -203,5 +203,5 @@ historyserver:
     - SERVICE_REGION=${DOCKER_ENVIRONMENT}
   dns: ${DOCKER_ENVIRONMENT_DNS}
   dns_search: ${DOCKER_CONTAINER_DOMAIN}
-  command: start-historyserver.sh --update-hostname ${NFS_PARAMS}
+  command: start-historyserver.sh --update-hostname ${NFS_PARAMS} --update-config
 END
