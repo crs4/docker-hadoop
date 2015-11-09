@@ -29,6 +29,7 @@ ADD scripts/start-datanode.sh ${HADOOP_ADMIN_SCRIPTS}/start-datanode.sh
 ADD scripts/start-historyserver.sh ${HADOOP_ADMIN_SCRIPTS}/start-historyserver.sh
 ADD scripts/init-hdfs-folders.sh ${HADOOP_ADMIN_SCRIPTS}/init-hdfs-folders.sh
 ADD scripts/start-hadoop-services.sh ${HADOOP_ADMIN_SCRIPTS}/start-hadoop-services
+ADD scripts/hadoop-configurator.py ${HADOOP_ADMIN_SCRIPTS}/hadoop-configurator.py
 
 # Set PATH of the default Apache Hadoop v2 configuration
 ENV HADOOP_CUSTOM_CONF_DIR /opt/hadoop-v2-conf-base
