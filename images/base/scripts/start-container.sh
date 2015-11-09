@@ -40,6 +40,8 @@ else
 	update-etc-hosts
 fi
 
+# install psutil
+pip install psutil
 
 # initializes shared folders
 init-shared-folders ${nfs_enabled} ${nfs_shared_paths}
