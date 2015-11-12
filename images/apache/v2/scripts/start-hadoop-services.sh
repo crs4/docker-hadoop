@@ -66,7 +66,7 @@ if [[ ${background_mode} == true ]]; then
 	start-container.sh -d
 elif [[ -n $1 ]]; then
   	# exec a command as default user
-	sudo -E -u ${DEFAULT_USER} $@
+	$@
 else
     # enable a shell with the default user
 	su -l ${DEFAULT_USER}
