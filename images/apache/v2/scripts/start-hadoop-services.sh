@@ -23,7 +23,7 @@ if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; usage; exit 1 ; fi
 eval set -- "${OPTS}"
 while true; do
   case "$1" in
-    --external-dns ) external-dns=true; shift;;
+    --external-dns ) external_dns=true; shift;;
     -d ) background_mode=true; shift ;;
     --nfs-mounts ) nfs_enabled="true"; nfs_shared_paths="${2}" shift; shift ;;
     -- ) shift; break ;;
