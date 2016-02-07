@@ -22,8 +22,14 @@ usage() {
     exit 1;
 }
 
+getopt_cmd="getopt"
+platform=$(uname)
+if [[ "$platform" == 'Darwin' ]]; then
+   getopt_cmd=$(find /usr/local/Cellar/ -type f -name getopt)
+fi
+
 # parse arguments
-OPTS=`getopt -o r:p: --long "repository:,prefix:" -n 'parse-options' -- "$@"`
+OPTS=`${getopt_cmd} -o r:p: --long "repository:,prefix:" -n 'parse-options' -- "$@"`
 
 # check parsing result
 if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; usage; exit 1 ; fi
